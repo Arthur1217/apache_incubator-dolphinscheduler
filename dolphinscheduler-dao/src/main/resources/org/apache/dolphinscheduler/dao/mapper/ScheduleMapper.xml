@@ -19,7 +19,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.apache.dolphinscheduler.dao.mapper.ScheduleMapper">
     <select id="queryByProcessDefineIdPaging" resultType="org.apache.dolphinscheduler.dao.entity.Schedule">
-        select p_f.name as process_definition_name, p.name as project_name,u.user_name,s.*
+        select p_f.name as process_definition_name, p.name as project_name,u.user_name,s.*, p_f.template_id, (SELECT name FROM t_ds_process_template dpt WHERE dpt.id = p_f.template_id) AS "templateName"
         from t_ds_schedules s
         join t_ds_process_definition p_f on s.process_definition_id = p_f.id
         join t_ds_project as p on p_f.project_id = p.id

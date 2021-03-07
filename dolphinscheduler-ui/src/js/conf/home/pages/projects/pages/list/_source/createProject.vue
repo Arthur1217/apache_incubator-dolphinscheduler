@@ -31,6 +31,18 @@
           </template>
         </m-list-box-f>
         <m-list-box-f>
+          <template slot="name">{{$t('App Root Url')}}</template>
+          <template slot="content">
+            <x-input
+              type="input"
+              v-model="appRootUrl"
+              maxlength="255"
+              :placeholder="$t('Please enter app root url')"
+              autocomplete="off">
+            </x-input>
+          </template>
+        </m-list-box-f>
+        <m-list-box-f>
           <template slot="name">{{$t('Description')}}</template>
           <template slot="content">
             <x-input
@@ -58,7 +70,8 @@
       return {
         store,
         description: '',
-        projectName: ''
+        projectName: '',
+        appRootUrl: ''
       }
     },
     props: {
@@ -72,6 +85,7 @@
 
         let param = {
           projectName: _.trim(this.projectName),
+          appRootUrl: _.trim(this.appRootUrl),
           description: _.trim(this.description)
         }
 
@@ -105,6 +119,7 @@
     created () {
       if (this.item) {
         this.projectName = this.item.name
+        this.appRootUrl = this.item.appRootUrl
         this.description = this.item.description
       }
     },

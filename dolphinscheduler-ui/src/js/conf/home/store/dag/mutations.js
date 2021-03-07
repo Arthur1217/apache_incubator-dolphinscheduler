@@ -21,6 +21,9 @@ export default {
   setProjectName (state, payload) {
     state.projectName = payload
   },
+  setAppRootUrl (state, payload) {
+    state.appRootUrl = payload
+  },
   /**
    * set tasks
    * */
@@ -50,6 +53,24 @@ export default {
    */
   setName (state, payload) {
     state.name = payload
+  },
+  /**
+   * set business type id
+   */
+  setBizTypeId (state, payload) {
+    state.bizTypeId = payload
+  },
+  /**
+   * set business form url
+   */
+  setBizFormUrl (state, payload) {
+    state.bizFormUrl = payload
+  },
+  /**
+   * set template id
+   */
+  setTemplateId (state, payload) {
+    state.templateId = payload
   },
   /**
    * set timeout
@@ -96,6 +117,20 @@ export default {
   },
 
   /**
+   * form flow mode
+   */
+  setIsFormFlow(state, payload) {
+    state.isFormFlow = payload;
+  },
+
+  /**
+   * business properties configuration params
+   */
+  setBizPropConfigParam(state, payload) {
+    state.bizPropConfigParam = payload
+  },
+
+  /**
    * reset params
    */
   resetParams (state, payload) {
@@ -103,6 +138,9 @@ export default {
     state.globalParams = (payload && payload.globalParams) || []
     state.tasks = (payload && payload.tasks) || []
     state.name = (payload && payload.name) || ''
+    state.bizTypeId = (payload && payload.bizTypeId) || ''
+    state.bizFormUrl = (payload && payload.bizFormUrl) || ''
+    state.templateId = (payload && payload.templateId) || ''
     state.description = (payload && payload.description) || ''
     state.timeout = (payload && payload.timeout) || 0
     state.tenantId = (payload && payload.tenantId) || -1
@@ -112,6 +150,7 @@ export default {
     state.resourcesListPy = (payload && payload.resourcesListPy) || []
     state.projectListS = (payload && payload.projectListS) || []
     state.isDetails = (payload && payload.isDetails) || false
+    state.isFormFlow = (payload && payload.isFormFlow) || false
     state.runFlag = (payload && payload.runFlag) || ''
     state.locations = (payload && payload.locations) || {}
     state.connects = (payload && payload.connects) || []

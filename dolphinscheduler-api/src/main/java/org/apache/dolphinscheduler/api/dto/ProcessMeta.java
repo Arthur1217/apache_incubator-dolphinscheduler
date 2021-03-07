@@ -30,6 +30,21 @@ public class ProcessMeta {
      * process definition name
      */
     private String processDefinitionName;
+    
+    /**
+     * business type id
+     */
+    private int bizTypeId;
+    
+    /**
+     * business form url
+     */
+    private String bizFormUrl;
+    
+    /**
+     * template id
+     */
+    private int templateId;
 
     /**
      * processs definition json
@@ -116,7 +131,31 @@ public class ProcessMeta {
     public void setProcessDefinitionName(String processDefinitionName) {
         this.processDefinitionName = processDefinitionName;
     }
-
+    
+    public int getBizTypeId() {
+        return bizTypeId;
+    }
+    
+    public void setBizTypeId(int bizTypeId) {
+        this.bizTypeId = bizTypeId;
+    }
+    
+    public String getBizFormUrl() {
+        return bizFormUrl;
+    }
+    
+    public void setBizFormUrl(String bizFormUrl) {
+        this.bizFormUrl = bizFormUrl;
+    }
+    
+    public int getTemplateId() {
+        return templateId;
+    }
+    
+    public void setTemplateId(int templateId) {
+        this.templateId = templateId;
+    }
+    
     public String getProcessDefinitionJson() {
         return processDefinitionJson;
     }

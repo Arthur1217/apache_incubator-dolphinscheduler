@@ -68,6 +68,8 @@ public class ProjectServiceTest {
 
 
     private String projectName = "ProjectServiceTest";
+    
+    private String appRootUrl = "http://test.com/test";
 
     private String userName = "ProjectServiceTest";
 
@@ -87,19 +89,19 @@ public class ProjectServiceTest {
 
         User loginUser  = getLoginUser();
         loginUser.setId(1);
-        Map<String, Object> result = projectService.createProject(loginUser, projectName, getDesc());
+        Map<String, Object> result = projectService.createProject(loginUser, projectName, appRootUrl, getDesc());
         logger.info(result.toString());
         Assert.assertEquals(Status.REQUEST_PARAMS_NOT_VALID_ERROR,result.get(Constants.STATUS));
 
         //project name exist
         Mockito.when(projectMapper.queryByName(projectName)).thenReturn(getProject());
-        result = projectService.createProject(loginUser, projectName, projectName);
+        result = projectService.createProject(loginUser, projectName, appRootUrl, projectName);
         logger.info(result.toString());
         Assert.assertEquals(Status.PROJECT_ALREADY_EXISTS,result.get(Constants.STATUS));
 
         //success
         Mockito.when(projectMapper.insert(Mockito.any(Project.class))).thenReturn(1);
-        result = projectService.createProject(loginUser, "test", "test");
+        result = projectService.createProject(loginUser, "test", appRootUrl, "test");
         logger.info(result.toString());
         Assert.assertEquals(Status.SUCCESS,result.get(Constants.STATUS));
 
@@ -231,19 +233,19 @@ public class ProjectServiceTest {
         Mockito.when(projectMapper.queryByName(projectName)).thenReturn(project);
         Mockito.when( projectMapper.selectById(1)).thenReturn(getProject());
         // PROJECT_NOT_FOUNT
-        Map<String, Object> result = projectService.update(loginUser,12,projectName,"desc");
+        Map<String, Object> result = projectService.update(loginUser,12,projectName, appRootUrl,"desc");
         logger.info(result.toString());
         Assert.assertEquals(Status.PROJECT_NOT_FOUNT,result.get(Constants.STATUS));
 
         //PROJECT_ALREADY_EXISTS
-        result = projectService.update(loginUser,1,projectName,"desc");
+        result = projectService.update(loginUser,1,projectName, appRootUrl,"desc");
         logger.info(result.toString());
         Assert.assertEquals(Status.PROJECT_ALREADY_EXISTS,result.get(Constants.STATUS));
 
         //success
         project.setUserId(1);
         Mockito.when(projectMapper.updateById(Mockito.any(Project.class))).thenReturn(1);
-        result = projectService.update(loginUser,1,"test","desc");
+        result = projectService.update(loginUser,1,"test", appRootUrl,"desc");
         logger.info(result.toString());
         Assert.assertEquals(Status.SUCCESS,result.get(Constants.STATUS));
 

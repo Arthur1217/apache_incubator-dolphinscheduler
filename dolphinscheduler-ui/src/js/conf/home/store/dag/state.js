@@ -19,10 +19,17 @@ import localStore from '@/module/util/localStorage'
 
 // Get the name of the item currently clicked
 const projectName = localStore.getItem('projectName')
+const appRootUrl = localStore.getItem('appRootUrl')
 
 export default {
   // name
   name: '',
+  // business type id
+  bizTypeId: '',
+  // business form url
+  bizFormUrl: '',
+  // template id
+  templateId: '',
   // description
   description: '',
   // Node global parameter
@@ -45,9 +52,11 @@ export default {
   isEditDag: false,
   // Current project
   projectName: projectName || '',
+  // Application root url of current project
+  appRootUrl: appRootUrl || '',
   // Whether to update the process definition
   syncDefine: true,
-  // tasks processList
+  // tasks processList or templateList
   processListS: [],
   // projectList
   projectListS: [],
@@ -106,6 +115,8 @@ export default {
   instanceListS: [],
   // Operating state
   isDetails: false,
+  isFormFlow: false,
+  bizPropConfigParam: {},
   startup: {
 
   }

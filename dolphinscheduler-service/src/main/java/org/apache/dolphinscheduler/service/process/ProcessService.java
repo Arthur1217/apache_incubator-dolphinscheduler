@@ -63,6 +63,9 @@ public class ProcessService {
 
     @Autowired
     private ProcessDefinitionMapper processDefineMapper;
+    
+    @Autowired
+    private ProcessTemplateMapper processTemplateMapper;
 
     @Autowired
     private ProcessInstanceMapper processInstanceMapper;
@@ -271,6 +274,15 @@ public class ProcessService {
      */
     public ProcessDefinition findProcessDefineById(int processDefinitionId) {
         return processDefineMapper.selectById(processDefinitionId);
+    }
+    
+    /**
+     * find process template by id.
+     * @param processTemplateId processTemplateId
+     * @return process definition
+     */
+    public ProcessTemplate findProcessTemplateById(int processTemplateId) {
+        return processTemplateMapper.selectById(processTemplateId);
     }
 
     /**

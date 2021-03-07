@@ -40,7 +40,19 @@ public class Schedule {
    * process definition id
    */
   private int processDefinitionId;
-
+  
+  /**
+   * template id
+   */
+  @TableField(exist = false)
+  private Integer templateId;
+  
+  /**
+   * template name
+   */
+  @TableField(exist = false)
+  private String templateName;
+  
   /**
    * process definition name
    */
@@ -216,7 +228,23 @@ public class Schedule {
   public void setProcessDefinitionId(int processDefinitionId) {
     this.processDefinitionId = processDefinitionId;
   }
-
+  
+  public Integer getTemplateId() {
+    return templateId;
+  }
+  
+  public void setTemplateId(Integer templateId) {
+    this.templateId = templateId;
+  }
+  
+  public String getTemplateName() {
+    return templateName;
+  }
+  
+  public void setTemplateName(String templateName) {
+    this.templateName = templateName;
+  }
+  
   public String getProcessDefinitionName() {
     return processDefinitionName;
   }

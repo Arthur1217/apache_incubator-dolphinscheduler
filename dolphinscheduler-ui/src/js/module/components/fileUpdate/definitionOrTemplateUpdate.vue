@@ -75,6 +75,7 @@
   </m-popup>
 </template>
 <script>
+  import _ from 'lodash'
   import io from '@/module/io'
   import i18n from '@/module/i18n'
   import store from '@/conf/home/store'
@@ -142,7 +143,7 @@
           let formData = new FormData()
           formData.append('file', this.file)
           formData.append('projectName',this.store.state.dag.projectName)
-          io.post(`projects/import-definition`, res => {
+          io.post(`projects/import-` + _.lowerCase(this.type), res => {
             this.$message.success(res.msg)
             resolve()
             self.$emit('onUpdate')

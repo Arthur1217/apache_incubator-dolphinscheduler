@@ -39,6 +39,12 @@ const menu = {
       icon: 'ans-icon-gear',
       children: [
         {
+          name: `${i18n.$t('Process template')}`,
+          path: 'template',
+          id: 5,
+          disabled: true
+        },
+        {
           name: `${i18n.$t('Process definition')}`,
           path: 'definition',
           id: 0,

@@ -19,6 +19,7 @@ package org.apache.dolphinscheduler.api.controller;
 
 import org.apache.dolphinscheduler.api.exceptions.ApiException;
 import org.apache.dolphinscheduler.api.service.ProcessDefinitionService;
+import org.apache.dolphinscheduler.api.service.ProcessTemplateService;
 import org.apache.dolphinscheduler.api.service.ProjectService;
 import org.apache.dolphinscheduler.api.utils.Result;
 import org.apache.dolphinscheduler.common.Constants;
@@ -55,18 +56,23 @@ public class ProjectController extends BaseController {
 
     @Autowired
     private ProcessDefinitionService processDefinitionService;
+    
+    @Autowired
+    private ProcessTemplateService processTemplateService;
 
     /**
      * create project
      *
      * @param loginUser   login user
      * @param projectName project name
+     * @param appRootUrl  app root url
      * @param description description
      * @return returns an error if it exists
      */
     @ApiOperation(value = "createProject", notes = "CREATE_PROJECT_NOTES")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "projectName", value = "PROJECT_NAME", dataType = "String"),
+            @ApiImplicitParam(name = "appRootUrl", value = "APP_ROOT_URL", dataType = "String"),
             @ApiImplicitParam(name = "description", value = "PROJECT_DESC", dataType = "String")
     })
     @PostMapping(value = "/create")
@@ -74,10 +80,11 @@ public class ProjectController extends BaseController {
     @ApiException(CREATE_PROJECT_ERROR)
     public Result createProject(@ApiIgnore @RequestAttribute(value = Constants.SESSION_USER) User loginUser,
                                 @RequestParam("projectName") String projectName,
+                                @RequestParam(value = "appRootUrl", required = false) String appRootUrl,
                                 @RequestParam(value = "description", required = false) String description) {
 
-        logger.info("login user {}, create project name: {}, desc: {}", loginUser.getUserName(), projectName, description);
-        Map<String, Object> result = projectService.createProject(loginUser, projectName, description);
+        logger.info("login user {}, create project name: {}, app root url: {}, desc: {}", loginUser.getUserName(), projectName, appRootUrl, description);
+        Map<String, Object> result = projectService.createProject(loginUser, projectName, appRootUrl, description);
         return returnDataList(result);
     }
 
@@ -87,6 +94,7 @@ public class ProjectController extends BaseController {
      * @param loginUser   login user
      * @param projectId   project id
      * @param projectName project name
+     * @param appRootUrl  app root url
      * @param description description
      * @return update result code
      */
@@ -94,6 +102,7 @@ public class ProjectController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "projectId", value = "PROJECT_ID", dataType = "Int", example = "100"),
             @ApiImplicitParam(name = "projectName", value = "PROJECT_NAME", dataType = "String"),
+            @ApiImplicitParam(name = "appRootUrl", value = "APP_ROOT_URL", dataType = "String"),
             @ApiImplicitParam(name = "description", value = "PROJECT_DESC", dataType = "String")
     })
     @PostMapping(value = "/update")
@@ -102,9 +111,10 @@ public class ProjectController extends BaseController {
     public Result updateProject(@ApiIgnore @RequestAttribute(value = Constants.SESSION_USER) User loginUser,
                                 @RequestParam("projectId") Integer projectId,
                                 @RequestParam("projectName") String projectName,
+                                @RequestParam(value = "appRootUrl", required = false) String appRootUrl,
                                 @RequestParam(value = "description", required = false) String description) {
-        logger.info("login user {} , updateProcessInstance project name: {}, desc: {}", loginUser.getUserName(), projectName, description);
-        Map<String, Object> result = projectService.update(loginUser, projectId, projectName, description);
+        logger.info("login user {} , updateProcessInstance project name: {}, app root url: {}, desc: {}", loginUser.getUserName(), projectName, appRootUrl, description);
+        Map<String, Object> result = projectService.update(loginUser, projectId, projectName, appRootUrl, description);
         return returnDataList(result);
     }
 
@@ -235,7 +245,7 @@ public class ProjectController extends BaseController {
      * @return import result code
      */
 
-    @ApiOperation(value = "importProcessDefinition", notes= "EXPORT_PROCESS_DEFINITION_NOTES")
+    @ApiOperation(value = "importProcessDefinition", notes= "IMPORT_PROCESS_DEFINITION_NOTES")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "file", value = "RESOURCE_FILE", required = true, dataType = "MultipartFile")
     })
@@ -247,6 +257,29 @@ public class ProjectController extends BaseController {
         logger.info("import process definition by id, login user:{}, project: {}",
                 loginUser.getUserName(), projectName);
         Map<String, Object> result = processDefinitionService.importProcessDefinition(loginUser, file, projectName);
+        return returnDataList(result);
+    }
+    
+    /**
+     * import process template
+     *
+     * @param loginUser   login user
+     * @param file        resource file
+     * @param projectName project name
+     * @return import result code
+     */
+    @ApiOperation(value = "importProcessTemplate", notes= "IMPORT_PROCESS_TEMPLATE_NOTES")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "file", value = "RESOURCE_FILE", required = true, dataType = "MultipartFile")
+    })
+    @PostMapping(value = "/import-template")
+    @ApiException(IMPORT_PROCESS_TEMPLATE_ERROR)
+    public Result importProcessTemplate(@ApiIgnore @RequestAttribute(value = Constants.SESSION_USER) User loginUser,
+                                          @RequestParam("file") MultipartFile file,
+                                          @RequestParam("projectName") String projectName) {
+        logger.info("import process template by id, login user:{}, project: {}",
+                loginUser.getUserName(), projectName);
+        Map<String, Object> result = processTemplateService.importProcessTemplate(loginUser, file, projectName);
         return returnDataList(result);
     }
 

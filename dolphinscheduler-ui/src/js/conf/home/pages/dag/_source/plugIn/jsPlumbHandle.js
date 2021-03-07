@@ -35,6 +35,7 @@ import {
   computeScale
 } from './util'
 import mStart from '@/conf/home/pages/projects/pages/definition/pages/list/_source/start'
+import bizFormModel from "../bizFormModel/bizFormModel";
 
 let JSP = function () {
   this.dag = {}
@@ -52,7 +53,9 @@ let JSP = function () {
     // Whether to support right-click menu events
     isContextmenu: true,
     // Whether to allow click events
-    isClick: false
+    isClick: false,
+    // Whether to execute business properties configuration
+    isFormFlow: false,
   }
 }
 /**
@@ -78,7 +81,8 @@ JSP.prototype.init = function ({ dag, instance, options }) {
     isNewNodes: !store.state.dag.isDetails, // Permissions.getAuth() === false ? false : !store.state.dag.isDetails,
     isDblclick: true,
     isContextmenu: true,
-    isClick: false
+    isClick: false,
+    isFormFlow: store.state.dag.isFormFlow
   })
 
   // Monitor line click
@@ -202,7 +206,8 @@ JSP.prototype.jsonHandle = function ({ largeJson, locations }) {
       runFlag: v.runFlag,
       nodenumber: locations[v.id].nodenumber,
       successNode: v.conditionResult === undefined? '' : v.conditionResult.successNode[0],
-      failedNode: v.conditionResult === undefined? '' : v.conditionResult.failedNode[0]
+      failedNode: v.conditionResult === undefined? '' : v.conditionResult.failedNode[0],
+      bizFormUrl: v.bizFormUrl
     }))
 
     // contextmenu event
@@ -378,29 +383,39 @@ JSP.prototype.tasksClick = function (e) {
   let $id
   const self = this
   const $body = $('body')
-  if (this.config.isClick) {
-    const $connect = this.selectedElement.connect
-    $('.w').removeClass('jtk-tasks-active')
-    $(e.currentTarget).addClass('jtk-tasks-active')
-    if ($connect) {
-      setSvgColor($connect, '#2d8cf0')
-      this.selectedElement.connect = null
+  if (this.config.isFormFlow) {
+    $id = $(e.currentTarget).attr('id');
+    let bizFormUrl = $(`#${$id}`).data('biz-form-url');
+    if (bizFormUrl) {
+      findComponentDownward(this.dag.$root, 'dag-chart')._showBizPropConfigForm({
+        id: $id
+      });
     }
-    this.selectedElement.id = $(e.currentTarget).attr('id')
-
-    // Unbind copy and paste events
-    $body.unbind('copy').unbind('paste')
-    // Copy binding id
-    $id = self.selectedElement.id
-
-    $body.bind({
-      copy: function () {
-        $id = self.selectedElement.id
-      },
-      paste: function () {
-        $id && self.copyNodes($id)
+  } else {
+    if (this.config.isClick) {
+      const $connect = this.selectedElement.connect
+      $('.w').removeClass('jtk-tasks-active')
+      $(e.currentTarget).addClass('jtk-tasks-active')
+      if ($connect) {
+        setSvgColor($connect, '#2d8cf0')
+        this.selectedElement.connect = null
       }
-    })
+      this.selectedElement.id = $(e.currentTarget).attr('id')
+
+      // Unbind copy and paste events
+      $body.unbind('copy').unbind('paste')
+      // Copy binding id
+      $id = self.selectedElement.id
+
+      $body.bind({
+        copy: function () {
+          $id = self.selectedElement.id
+        },
+        paste: function () {
+          $id && self.copyNodes($id)
+        }
+      })
+    }
   }
 }
 
@@ -557,7 +572,8 @@ JSP.prototype.copyNodes = function ($id) {
     x: newX,
     y: newY,
     isAttachment: this.config.isAttachment,
-    taskType: newNodeInfo.type
+    taskType: newNodeInfo.type,
+    bizFormUrl: newNodeInfo.bizFormUrl
   }))
 
   // Get the generated node
@@ -650,7 +666,7 @@ JSP.prototype.saveStore = function () {
         tasks.push(tasksParam)
       }
     })
-    
+
     _.map(this.JspInstance.getConnections(), v => {
       connects.push({
         endPointSourceId: v.sourceId,
@@ -677,7 +693,7 @@ JSP.prototype.saveStore = function () {
       Vue.$message.warning(`${i18n.$t('The workflow canvas is abnormal and cannot be saved, please recreate')}`)
       return false
     }
-    
+
     // Storage node
     store.commit('dag/setTasks', tasks)
     // Store coordinate information
@@ -723,13 +739,13 @@ JSP.prototype.handleEvent = function () {
         }
       return recursiveVal
     }
-    
+
     // Connection to connected nodes is not allowed
     if (_.findIndex(rtTargetArrs, v => v === sourceId) !== -1) {
       console.log(rtTargetArrs,'not allowed')
       return false
     }
-    
+
     // Recursive form to find if the target Targetarr has a sourceId
     if (recursiveTargetarr(rtSouceArrs, targetId)) {
       console.log('has a sourceId')
@@ -778,7 +794,7 @@ JSP.prototype.jspBackfill = function ({ connects, locations, largeJson }) {
         sourceId = v.endPointSourceId
         targetId = v.endPointTargetId
       }
-      
+
       if($(`#${sourceId}`).attr('data-tasks-type') === 'CONDITIONS' && $(`#${sourceId}`).attr('data-successnode') === $(`#${targetId}`).find('.name-p').text()) {
         this.JspInstance.connect({
           source: sourceId,

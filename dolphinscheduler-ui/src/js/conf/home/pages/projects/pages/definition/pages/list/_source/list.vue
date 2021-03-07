@@ -28,6 +28,9 @@
           <th scope="col" style="min-width: 200px;max-width: 300px;">
             <span>{{$t('Process Name')}}</span>
           </th>
+          <th scope="col" style="min-width: 60px;">
+            <span>{{$t('With Template')}}</span>
+          </th>
           <th scope="col" style="min-width: 50px">
             <span>{{$t('State')}}</span>
           </th>
@@ -59,11 +62,10 @@
           </td>
           <td style="min-width: 200px;max-width: 300px;padding-right: 10px;">
             <span class="ellipsis">
-              <router-link :to="{ path: '/projects/definition/list/' + item.id}" tag="a" class="links" :title="item.name">
-                {{item.name}}
-              </router-link>
+              <a href="javascript:void(0);" class="links" @click="_edit(item)">{{item.name}}</a>
             </span>
           </td>
+          <td><span>{{_rtWithTemplateStatus(item.templateId)}}</span></td>
           <td><span>{{_rtPublishStatus(item.releaseState)}}</span></td>
           <td>
             <span v-if="item.createTime">{{item.createTime | formatDate}}</span>
@@ -144,9 +146,10 @@
 </template>
 <script>
   import _ from 'lodash'
+  import i18n from '@/module/i18n'
   import mStart from './start'
   import mTiming from './timing'
-  import { mapActions } from 'vuex'
+  import { mapActions, mapMutations } from 'vuex'
   import { publishStatus } from '@/conf/home/pages/dag/_source/config'
 
   export default {
@@ -166,6 +169,10 @@
     methods: {
       ...mapActions('dag', ['editProcessState', 'getStartCheck', 'getReceiver', 'deleteDefinition', 'batchDeleteDefinition','exportDefinition','copyProcess']),
       ...mapActions('security', ['getWorkerGroupsAll']),
+      ...mapMutations('dag', ['setBizPropConfigParam']),
+      _rtWithTemplateStatus (templateId) {
+        return templateId ? `${i18n.$t('Yes')}` : `${i18n.$t('No')}`;
+      },
       _rtPublishStatus (code) {
         return _.filter(publishStatus, v => v.code === code)[0].desc
       },
@@ -191,6 +198,13 @@
                   onUpdate () {
                     self._onUpdate()
                     modal.remove()
+                  },
+                  onBizPropConfig(bizPropConfigParam) {
+                    modal.remove();
+                    self.setBizPropConfigParam(bizPropConfigParam);
+                    self.$router.push({
+                      path: `/projects/definition/biz-prop-config/${item.id}`
+                    });
                   },
                   close () {
                     modal.remove()
@@ -237,6 +251,13 @@
                   onUpdate () {
                     self._onUpdate()
                     modal.remove()
+                  },
+                  onBizPropConfig(bizPropConfigParam) {
+                    modal.remove();
+                    self.setBizPropConfigParam(bizPropConfigParam);
+                    self.$router.push({
+                      path: `/projects/definition/biz-prop-config/${item.id}`
+                    });
                   },
                   close () {
                     modal.remove()
@@ -296,7 +317,25 @@
        * edit
        */
       _edit (item) {
-        this.$router.push({ path: `/projects/definition/list/${item.id}` })
+        if (item.templateId) {
+          let self = this;
+          this.$modal.dialog({
+            closable: false,
+            showMask: true,
+            escClose: true,
+            className: 'v-modal-custom',
+            transitionName: 'opacityp',
+            title: `<span style="color: red; font-weight: bold;">${i18n.$t('Edit?')}</span>`,
+            content: `${i18n.$t('Definition with template editing warning')}`,
+            ok: {
+              handle() {
+                self.$router.push({ path: `/projects/definition/list/${item.id}` })
+              }
+            }
+          });
+        } else {
+          this.$router.push({ path: `/projects/definition/list/${item.id}` })
+        }
       },
       /**
        * Offline

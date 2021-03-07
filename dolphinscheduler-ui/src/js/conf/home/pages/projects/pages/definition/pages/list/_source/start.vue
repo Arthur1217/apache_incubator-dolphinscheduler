@@ -17,7 +17,8 @@
 <template>
   <div class="start-process-model">
     <div class="title-box">
-      <span>{{$t('Please set the parameters before starting')}}</span>
+      <span v-if="!item.templateId">{{$t('Please set the parameters before starting')}}</span>
+      <span v-if="item.templateId" >{{$t('Please set the parameters before starting')}} - [{{$t('Process Template Name')}}：{{item.templateName}}]</span>
     </div>
     <div class="clearfix list">
       <div class="text">
@@ -159,7 +160,8 @@
     </template>
     <div class="submit">
       <x-button type="text" @click="close()"> {{$t('Cancel')}} </x-button>
-      <x-button type="primary" shape="circle" :loading="spinnerLoading" @click="ok()">{{spinnerLoading ? 'Loading...' : $t('Start')}} </x-button>
+      <x-button type="primary" shape="circle" v-if="item.templateId" @click="bizPropConfig()"> {{$t('Biz prop config')}} </x-button>
+      <x-button type="primary" shape="circle" v-if="!item.templateId" :loading="spinnerLoading" @click="ok()">{{spinnerLoading ? 'Loading...' : $t('Start')}} </x-button>
     </div>
   </div>
 </template>
@@ -263,6 +265,34 @@
       },
       ok () {
         this._start()
+      },
+      bizPropConfig () {
+        let apiParams = {
+          processDefinitionId: this.item.id,
+          scheduleTime: this.scheduleTime.length && this.scheduleTime.join(',') || '',
+          failureStrategy: this.failureStrategy,
+          warningType: this.warningType,
+          warningGroupId: this.warningGroupId=='' ? 0 : this.warningGroupId,
+          execType: this.execType ? 'COMPLEMENT_DATA' : null,
+          startNodeList: this.startNodeList,
+          taskDependType: this.taskDependType,
+          runMode: this.runMode,
+          processInstancePriority: this.processInstancePriority,
+          receivers: this.receivers.join(',') || '',
+          receiversCc: this.receiversCc.join(',') || '',
+          workerGroup: this.workerGroup
+        }
+        // Executed from the specified node
+        if (this.sourceType === 'contextmenu') {
+          apiParams.taskDependType = this.taskDependType
+        }
+        this.$emit('onBizPropConfig', {
+          type: 'START',
+          param: {
+            api: 'dag/processStart',
+            apiParams: apiParams
+          }
+        });
       },
       close () {
         this.$emit('close')

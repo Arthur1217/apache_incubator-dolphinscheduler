@@ -26,35 +26,41 @@ import i18n from '@/module/i18n'
  */
 const toolOper = (dagThis) => {
   const disabled = !!dagThis.$store.state.dag.isDetails// Permissions.getAuth() === false ? false : !dagThis.$store.state.dag.isDetails
+  const isFormFlow = !!dagThis.$store.state.dag.isFormFlow
   return [
     {
       code: 'pointer',
       icon: 'ans-icon-pointer',
       disable: disabled,
+      show: !isFormFlow,
       desc: `${i18n.$t('Drag Nodes and Selected Items')}`
     },
     {
       code: 'line',
       icon: 'ans-icon-slash',
       disable: disabled,
+      show: !isFormFlow,
       desc: `${i18n.$t('Select Line Connection')}`
     },
     {
       code: 'remove',
       icon: 'ans-icon-trash',
       disable: disabled,
+      show: !isFormFlow,
       desc: `${i18n.$t('Delete selected lines or nodes')}`
     },
     {
       code: 'download',
       icon: 'ans-icon-download',
       disable: !dagThis.type,
+      show: true,
       desc: `${i18n.$t('Download')}`
     },
     {
       code: 'screen',
       icon: 'ans-icon-max',
       disable: false,
+      show: true,
       desc: `${i18n.$t('Full Screen')}`
     }
   ]

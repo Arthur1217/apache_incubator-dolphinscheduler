@@ -37,6 +37,24 @@ const deleteDefinitionList = (tasks) => {
   });
   return newTasks;
 }
+// delete 'templateList' from tasks
+const deleteTemplateList = (tasks) => {
+  const newTasks = [];
+  tasks.forEach(item => {
+    const newItem = Object.assign({}, item);
+    if(newItem.dependence && newItem.dependence.dependTaskList) {
+      newItem.dependence.dependTaskList.forEach(dependTaskItem => {
+        if (dependTaskItem.dependItemList) {
+          dependTaskItem.dependItemList.forEach(dependItem => {
+            Reflect.deleteProperty(dependItem, 'templateList');
+          })
+        }
+      })
+    }
+    newTasks.push(newItem);
+  });
+  return newTasks;
+}
 
 export default {
   /**
@@ -80,6 +98,21 @@ export default {
     })
   },
   /**
+   * Update process template status
+   */
+  editTemplateState ({ state }, payload) {
+    return new Promise((resolve, reject) => {
+      io.post(`projects/${state.projectName}/template/release`, {
+        processTemplateId: payload.processTemplateId,
+        releaseState: payload.releaseState
+      }, res => {
+        resolve(res)
+      }).catch(e => {
+        reject(e)
+      })
+    })
+  },
+  /**
    * Update process instance status
    */
   editExecutorsState ({ state }, payload) {
@@ -109,6 +142,21 @@ export default {
       })
     })
   },
+  /**
+   * Verify that the DGA map name exists for process template
+   */
+  verifDAGName4Template ({ state }, payload) {
+    return new Promise((resolve, reject) => {
+      io.get(`projects/${state.projectName}/template/verify-name`, {
+        name: payload
+      }, res => {
+        state.name = payload
+        resolve(res)
+      }).catch(e => {
+        reject(e)
+      })
+    })
+  },
 
   /**
    * Get process definition DAG diagram details
@@ -120,6 +168,12 @@ export default {
       }, res => {
         // name
         state.name = res.data.name
+        // business type id
+        state.bizTypeId = res.data.bizTypeId
+        // business form url
+        state.bizFormUrl = res.data.bizFormUrl
+        // template id
+        state.templateId = res.data.templateId
         // description
         state.description = res.data.description
         // connects
@@ -147,7 +201,45 @@ export default {
       })
     })
   },
-
+  /**
+   * Get process template DAG diagram details
+   */
+  getTemplateDetails ({ state }, payload) {
+    return new Promise((resolve, reject) => {
+      io.get(`projects/${state.projectName}/template/select-by-id`, {
+        processTemplateId: payload
+      }, res => {
+        // name
+        state.name = res.data.name
+        // business type id
+        state.bizTypeId = res.data.bizTypeId
+        // business form url
+        state.bizFormUrl = res.data.bizFormUrl
+        // description
+        state.description = res.data.description
+        // connects
+        state.connects = JSON.parse(res.data.connects)
+        // locations
+        state.locations = JSON.parse(res.data.locations)
+        // Process template
+        const processTemplateJson = JSON.parse(res.data.processTemplateJson)
+        // global params
+        state.globalParams = processTemplateJson.globalParams
+        // tasks info
+        state.tasks = processTemplateJson.tasks
+        // tasks cache
+        state.cacheTasks = {}
+        processTemplateJson.tasks.forEach(v => {
+          state.cacheTasks[v.id] = v
+        })
+        // tenant id
+        state.tenantId = processTemplateJson.tenantId
+        resolve(res.data)
+      }).catch(res => {
+        reject(res)
+      })
+    })
+  },
   /**
    * Get process definition DAG diagram details
    */
@@ -155,6 +247,20 @@ export default {
     return new Promise((resolve, reject) => {
       io.post(`projects/${state.projectName}/process/copy`, {
         processId: payload.processId
+      }, res => {
+        resolve(res)
+      }).catch(e => {
+        reject(e)
+      })
+    })
+  },
+  /**
+   * Get process template DAG diagram details
+   */
+  copyTemplate ({ state }, payload) {
+    return new Promise((resolve, reject) => {
+      io.post(`projects/${state.projectName}/template/copy`, {
+        processTemplateId: payload.processTemplateId
       }, res => {
         resolve(res)
       }).catch(e => {
@@ -219,9 +325,37 @@ export default {
       io.post(`projects/${state.projectName}/process/save`, {
         processDefinitionJson: JSON.stringify(data),
         name: _.trim(state.name),
+        bizTypeId: _.trim(state.bizTypeId),
+        bizFormUrl: _.trim(state.bizFormUrl),
+        templateId: _.trim(state.templateId),
         description: _.trim(state.description),
         locations: JSON.stringify(state.locations),
         connects: JSON.stringify(state.connects)
+      }, res => {
+        resolve(res)
+      }).catch(e => {
+        reject(e)
+      })
+    })
+  },
+  /**
+   * Create process template
+   */
+  saveDAGchart4Template ({ state }, payload) {
+    return new Promise((resolve, reject) => {
+      const data = {
+        globalParams: state.globalParams,
+        tasks: deleteTemplateList(state.tasks),
+        tenantId: state.tenantId,
+      }
+      io.post(`projects/${state.projectName}/template/save`, {
+        name: _.trim(state.name),
+        bizTypeId: _.trim(state.bizTypeId),
+        bizFormUrl: _.trim(state.bizFormUrl),
+        description: _.trim(state.description),
+        locations: JSON.stringify(state.locations),
+        connects: JSON.stringify(state.connects),
+        processTemplateJson: JSON.stringify(data)
       }, res => {
         resolve(res)
       }).catch(e => {
@@ -247,6 +381,33 @@ export default {
         name: _.trim(state.name),
         description: _.trim(state.description),
         id: payload
+      }, res => {
+        resolve(res)
+        state.isEditDag = false
+      }).catch(e => {
+        reject(e)
+      })
+    })
+  },
+  /**
+   * Process template update
+   */
+  updateTemplate ({ state }, payload) {
+    return new Promise((resolve, reject) => {
+      const data = {
+        globalParams: state.globalParams,
+        tasks: deleteTemplateList(state.tasks),
+        tenantId: state.tenantId,
+      }
+      io.post(`projects/${state.projectName}/template/update`, {
+        id: payload,
+        name: _.trim(state.name),
+        bizTypeId: _.trim(state.bizTypeId),
+        bizFormUrl: _.trim(state.bizFormUrl),
+        description: _.trim(state.description),
+        locations: JSON.stringify(state.locations),
+        connects: JSON.stringify(state.connects),
+        processTemplateJson: JSON.stringify(data)
       }, res => {
         resolve(res)
         state.isEditDag = false
@@ -310,6 +471,18 @@ export default {
     })
   },
   /**
+   * Get a list of process templates (list page usage with pagination)
+   */
+  getTemplateListP ({ state }, payload) {
+    return new Promise((resolve, reject) => {
+      io.get(`projects/${state.projectName}/template/list-paging`, payload, res => {
+        resolve(res.data)
+      }).catch(res => {
+        reject(res)
+      })
+    })
+  },
+  /**
    * Get a list of project
    */
   getProjectList ({ state }, payload) {
@@ -332,6 +505,18 @@ export default {
   getProcessByProjectId ({ state }, payload) {
     return new Promise((resolve, reject) => {
       io.get(`projects/${state.projectName}/process/queryProcessDefinitionAllByProjectId`, payload, res => {
+        resolve(res.data)
+      }).catch(res => {
+        reject(res)
+      })
+    })
+  },
+  /**
+   * Get a list of process templates by project id
+   */
+  getTemplateByProjectId ({ state }, payload) {
+    return new Promise((resolve, reject) => {
+      io.get(`projects/${state.projectName}/template/queryProcessTemplateAllByProjectId`, payload, res => {
         resolve(res.data)
       }).catch(res => {
         reject(res)
@@ -586,11 +771,35 @@ export default {
     })
   },
   /**
+   * Delete template
+   */
+  deleteTemplate ({ state }, payload) {
+    return new Promise((resolve, reject) => {
+      io.get(`projects/${state.projectName}/template/delete`, payload, res => {
+        resolve(res)
+      }).catch(e => {
+        reject(e)
+      })
+    })
+  },
+  /**
    * Batch delete definition
    */
   batchDeleteDefinition ({ state }, payload) {
     return new Promise((resolve, reject) => {
       io.get(`projects/${state.projectName}/process/batch-delete`, payload, res => {
+        resolve(res)
+      }).catch(e => {
+        reject(e)
+      })
+    })
+  },
+  /**
+   * Batch delete template
+   */
+  batchDeleteTemplate ({ state }, payload) {
+    return new Promise((resolve, reject) => {
+      io.get(`projects/${state.projectName}/template/batch-delete`, payload, res => {
         resolve(res)
       }).catch(e => {
         reject(e)
@@ -623,6 +832,39 @@ export default {
     }
 
     io.get(`projects/${state.projectName}/process/export`, {processDefinitionIds: payload.processDefinitionIds}, res => {
+      downloadBlob(res, payload.fileName)
+    }, e => {
+
+    }, {
+      responseType: 'blob'
+    })
+  },
+  /**
+   * export template
+   */
+  exportTemplate ({ state }, payload) {
+    const downloadBlob = (data, fileNameS = 'json') => {
+      if (!data) {
+        return
+      }
+      const blob = new Blob([data])
+      const fileName = `${fileNameS}.json`
+      if ('download' in document.createElement('a')) { // 不是IE浏览器
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', fileName)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link) // 下载完成移除元素
+        window.URL.revokeObjectURL(url) // 释放掉blob对象
+      } else { // IE 10+
+        window.navigator.msSaveBlob(blob, fileName)
+      }
+    }
+
+    io.get(`projects/${state.projectName}/template/export`, {processTemplateIds: payload.processTemplateIds}, res => {
       downloadBlob(res, payload.fileName)
     }, e => {
 
@@ -728,6 +970,18 @@ export default {
     })
   },
   /**
+   * Query task node list 4 template
+   */
+  getTemplateTasksList ({ state }, payload) {
+    return new Promise((resolve, reject) => {
+      io.get(`projects/${state.projectName}/template/get-task-list-by-template-id`, payload, res => {
+        resolve(res.data)
+      }).catch(e => {
+        reject(e)
+      })
+    })
+  },
+  /**
    * Get the mailbox list interface
    */
   getReceiver ({ state }, payload) {
@@ -742,6 +996,18 @@ export default {
   getTaskListDefIdAll ({ state }, payload) {
     return new Promise((resolve, reject) => {
       io.get(`projects/${state.projectName}/process/get-task-list`, payload, res => {
+        resolve(res.data)
+      }).catch(e => {
+        reject(e)
+      })
+    })
+  },
+  /**
+   * Get task list by template id list
+   */
+  getTaskListTmpIdAll ({ state }, payload) {
+    return new Promise((resolve, reject) => {
+      io.get(`projects/${state.projectName}/template/get-task-list-by-template-id-list`, payload, res => {
         resolve(res.data)
       }).catch(e => {
         reject(e)

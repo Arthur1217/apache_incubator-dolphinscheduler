@@ -159,7 +159,7 @@
   import mFileChildUpdate from '@/module/components/fileUpdate/fileChildUpdate'
   import mFileChildReUpdate from '@/module/components/fileUpdate/fileChildReUpdate'
   import mResourceChildUpdate from '@/module/components/fileUpdate/resourceChildUpdate'
-  import mDefinitionUpdate from '@/module/components/fileUpdate/definitionUpdate'
+  import mDefinitionOrTemplateUpdate from '@/module/components/fileUpdate/definitionOrTemplateUpdate'
   import mProgressBar from '@/module/components/progressBar/progressBar'
 
   import { findLocale, localeList } from '@/module/i18n/config'
@@ -212,14 +212,14 @@
           className: 'update-file-modal',
           transitionName: 'opacityp',
           render (h) {
-            if(type === 'DEFINITION'){
-              return h(mDefinitionUpdate, {
+            if(type === 'DEFINITION' || type === 'TEMPLATE'){
+              return h(mDefinitionOrTemplateUpdate, {
                 on: {
                   onProgress (val) {
                     self.progress = val
                   },
                   onUpdate () {
-                    findComponentDownward(self.$root, `definition-list-index`)._updateList()
+                    findComponentDownward(self.$root, _.lowerCase(type) + `-list-index`)._updateList()
                     self.isUpdate = false
                     self.progress = 0
                     modal.remove()
@@ -236,7 +236,7 @@
                   type: type
                 }
               })
-            }else{
+            } else{
               return h(mFileUpdate, {
                 on: {
                   onProgress (val) {
@@ -459,7 +459,7 @@
     computed: {
       ...mapState('user', ['userInfo'])
     },
-    components: { mFileUpdate, mProgressBar, mDefinitionUpdate, mFileReUpload, mFileChildReUpdate }
+    components: { mFileUpdate, mProgressBar, mDefinitionOrTemplateUpdate, mFileReUpload, mFileChildReUpdate }
   }
 </script>
 

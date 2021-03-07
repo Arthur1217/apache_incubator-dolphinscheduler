@@ -59,12 +59,13 @@ public class ProjectService extends BaseService{
     /**
      * create project
      *
-     * @param loginUser login user
-     * @param name project name
-     * @param desc description
+     * @param loginUser  login user
+     * @param name       project name
+     * @param appRootUrl app root url
+     * @param desc       description
      * @return returns an error if it exists
      */
-    public Map<String, Object> createProject(User loginUser, String name, String desc) {
+    public Map<String, Object> createProject(User loginUser, String name, String appRootUrl, String desc) {
 
         Map<String, Object> result = new HashMap<>(5);
         Map<String, Object> descCheck = checkDesc(desc);
@@ -81,6 +82,7 @@ public class ProjectService extends BaseService{
         Date now = new Date();
 
         project.setName(name);
+        project.setAppRootUrl(appRootUrl);
         project.setDescription(desc);
         project.setUserId(loginUser.getId());
         project.setUserName(loginUser.getUserName());
@@ -240,13 +242,14 @@ public class ProjectService extends BaseService{
     /**
      * updateProcessInstance project
      *
-     * @param loginUser login user
-     * @param projectId project id
+     * @param loginUser   login user
+     * @param projectId   project id
      * @param projectName project name
-     * @param desc description
+     * @param appRootUrl  app root url
+     * @param desc        description
      * @return update result code
      */
-    public Map<String, Object> update(User loginUser, Integer projectId, String projectName, String desc) {
+    public Map<String, Object> update(User loginUser, Integer projectId, String projectName, String appRootUrl, String desc) {
         Map<String, Object> result = new HashMap<>(5);
 
         Map<String, Object> descCheck = checkDesc(desc);
@@ -265,6 +268,7 @@ public class ProjectService extends BaseService{
             return result;
         }
         project.setName(projectName);
+        project.setAppRootUrl(appRootUrl);
         project.setDescription(desc);
         project.setUpdateTime(new Date());
 

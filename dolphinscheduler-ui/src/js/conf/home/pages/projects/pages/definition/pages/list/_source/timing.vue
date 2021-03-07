@@ -17,7 +17,8 @@
 <template>
   <div class="timing-process-model">
     <div class="title-box">
-      <span>{{$t('Set parameters before timing')}}</span>
+      <span v-if="!item.templateId">{{$t('Set parameters before timing')}}</span>
+      <span v-if="item.templateId" >{{$t('Set parameters before timing')}} - [{{$t('Process Template Name')}}：{{item.templateName}}]</span>
     </div>
     <div class="clearfix list">
       <div class="text">
@@ -152,7 +153,8 @@
     </div>
     <div class="submit">
       <x-button type="text" @click="close()"> {{$t('Cancel')}} </x-button>
-      <x-button type="primary" shape="circle" :loading="spinnerLoading" @click="ok()">{{spinnerLoading ? 'Loading...' : (item.crontab ? $t('Edit') : $t('Create'))}} </x-button>
+      <x-button type="primary" shape="circle" v-if="item.templateId" @click="bizPropConfig()"> {{$t('Biz prop config')}} </x-button>
+      <x-button type="primary" shape="circle" v-if="!item.templateId" :loading="spinnerLoading" @click="ok()">{{spinnerLoading ? 'Loading...' : (item.crontab ? $t('Edit') : $t('Create'))}} </x-button>
     </div>
   </div>
 </template>
@@ -299,6 +301,49 @@
       ok () {
         this._timing()
       },
+      bizPropConfig () {
+        if (this._verification()) {
+          let scheduleType;
+          let api;
+          let apiParams = {
+            schedule: JSON.stringify({
+              startTime: this.scheduleTime[0],
+              endTime: this.scheduleTime[1],
+              crontab: this.crontab
+            }),
+            failureStrategy: this.failureStrategy,
+            warningType: this.warningType,
+            processInstancePriority: this.processInstancePriority,
+            warningGroupId: this.warningGroupId =='' ? 0 : this.warningGroupId,
+            receivers: this.receivers.join(',') || '',
+            receiversCc: this.receiversCc.join(',') || '',
+            workerGroup: this.workerGroup
+          }
+          let msg;
+          // edit
+          if (this.item.crontab) {
+            scheduleType = 'UPDATE';
+            api = 'dag/updateSchedule';
+            apiParams.id = this.item.id;
+            msg = `${i18n.$t('Edit')}${i18n.$t('success')},${i18n.$t('Please go online')}`;
+          } else {
+            scheduleType = 'CREATE';
+            api = 'dag/createSchedule';
+            apiParams.processDefinitionId = this.item.id;
+            msg = `${i18n.$t('Create')}${i18n.$t('success')}`;
+          }
+
+          this.$emit('onBizPropConfig', {
+            type: 'TIMING',
+            param: {
+              scheduleType: scheduleType,
+              api: api,
+              apiParams: apiParams,
+              msg: msg
+            }
+          });
+        }
+      },
       close () {
         this.$emit('close')
       },
@@ -426,10 +471,10 @@
     }
   }
   .x-date-packer-panel .x-date-packer-day .lattice label.bg-hover {
-    background: #00BFFF!important; 
+    background: #00BFFF!important;
     margin-top: -4px;
   }
   .x-date-packer-panel .x-date-packer-day .lattice em:hover {
-    background: #0098e1!important; 
+    background: #0098e1!important;
   }
 </style>

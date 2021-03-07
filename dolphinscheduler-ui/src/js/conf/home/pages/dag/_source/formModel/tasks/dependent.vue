@@ -65,6 +65,7 @@
   import mListBox from './_source/listBox'
   import mDependItemList from './_source/dependItemList'
   import disabledState from '@/module/mixin/disabledState'
+  import i18n from '@/module/i18n'
 
   export default {
     name: 'dependence',
@@ -83,6 +84,11 @@
       _addDep () {
         if (!this.isLoading) {
           this.isLoading = true
+          if (!this.store.state.dag.projectListS.length) {
+            this.$message.warning(`${i18n.$t('There are no projects that have one or more process definitions')}`);
+            this.isLoading = false;
+            return;
+          }
           this.dependTaskList.push({
             dependItemList: [],
             relation: 'AND'

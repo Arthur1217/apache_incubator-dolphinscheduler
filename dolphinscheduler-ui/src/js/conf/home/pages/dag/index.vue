@@ -21,6 +21,7 @@
   </div>
 </template>
 <script>
+  import i18n from '@/module/i18n'
   import mDag from './_source/dag.vue'
   import { mapActions, mapMutations } from 'vuex'
   import mSpin from '@/module/components/spin/spin'
@@ -35,13 +36,43 @@
         isLoading: true
       }
     },
+    computed: {
+      templateId() {
+        return this.$route.query.processTemplateId;
+      }
+    },
     // mixins
     mixins: [disabledState],
-    props: {},
     methods: {
-      ...mapMutations('dag', ['resetParams']),
-      ...mapActions('dag', ['getProcessList','getProjectList', 'getResourcesList','getResourcesListJar','getResourcesListJar']),
+      ...mapMutations('dag', ['resetParams', 'setTemplateId', 'setName', 'setDesc']),
+      ...mapActions('dag', ['getProcessList', 'getTemplateDetails', 'getProjectList', 'getResourcesList','getResourcesListJar','getResourcesListJar']),
       ...mapActions('security', ['getTenantList','getWorkerGroupsAll']),
+      _getTemplateDetailsOrNot() {
+        if (this.templateId) {
+          this.getTemplateDetails(this.templateId).then(res => {
+            this.setTemplateId(res.id);
+            this.setName('');
+            this.setDesc('');
+          });
+        }
+      },
+      _showWarn() {
+        this.$modal.dialog({
+          closable: false,
+          showMask: true,
+          escClose: true,
+          className: 'v-modal-custom',
+          transitionName: 'opacityp',
+          title: `<span style="color: red; font-weight: bold;">${i18n.$t('Warning')}</span>`,
+          content: `${i18n.$t('Definition with template editing warning')}`,
+          ok: {
+            text: `${i18n.$t('Known')}`
+          },
+          cancel: {
+            show: false
+          }
+        });
+      },
       /**
        * init
        */
@@ -51,8 +82,10 @@
         this.resetParams()
         // Promise Get node needs data
         Promise.all([
-          // get process definition
+          // get process definition list
           this.getProcessList(),
+          // get process template detail or not
+          this._getTemplateDetailsOrNot(),
           // get project
           this.getProjectList(),
           // get jar
@@ -67,6 +100,11 @@
           this.isLoading = false
           // Whether to pop up the box?
           Affirm.init(this.$root)
+          this.$nextTick(() => {
+            if (this.templateId) {
+              this._showWarn();
+            }
+          });
         }).catch(() => {
           this.isLoading = false
         })

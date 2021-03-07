@@ -66,6 +66,11 @@ public class Project {
      * update time
      */
     private Date updateTime;
+    
+    /**
+     * app root url
+     */
+    private String appRootUrl;
 
     /**
      * permission
@@ -132,7 +137,15 @@ public class Project {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
-
+    
+    public String getAppRootUrl() {
+        return appRootUrl;
+    }
+    
+    public void setAppRootUrl(String appRootUrl) {
+        this.appRootUrl = appRootUrl;
+    }
+    
     public void setDescription(String description) {
         this.description = description;
     }
@@ -173,6 +186,7 @@ public class Project {
                 ", description='" + description + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
+                ", appRootUrl=" + appRootUrl +
                 '}';
     }
 

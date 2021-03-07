@@ -152,7 +152,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { mapActions } from 'vuex'
+  import { mapActions, mapMutations } from 'vuex'
   import mSpin from '@/module/components/spin/spin'
   import mTiming from '../../pages/list/_source/timing'
   import mNoData from '@/module/components/noData/noData'
@@ -173,6 +173,7 @@
     },
     methods: {
       ...mapActions('dag', ['getScheduleList', 'scheduleOffline', 'scheduleOnline', 'getReceiver','deleteTiming']),
+      ...mapMutations('dag', ['setBizPropConfigParam']),
       /**
        * delete
        */
@@ -300,6 +301,13 @@
                     self.pageNo = 1
                     self._getScheduleList('false')
                     modal.remove()
+                  },
+                  onBizPropConfig(bizPropConfigParam) {
+                    modal.remove();
+                    self.setBizPropConfigParam(bizPropConfigParam);
+                    self.$router.push({
+                      path: `/projects/definition/biz-prop-config/${item.processDefinitionId}`
+                    });
                   },
                   close () {
                     modal.remove()

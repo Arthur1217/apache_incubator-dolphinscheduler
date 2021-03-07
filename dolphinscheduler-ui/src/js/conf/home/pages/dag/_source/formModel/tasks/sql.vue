@@ -442,7 +442,9 @@
       }
       // read tasks from cache
       if (!_.some(this.store.state.dag.cacheTasks, { id: this.createNodeId }) &&
-        this.router.history.current.name !== 'definition-create') {
+        this.router.history.current.name !== 'definition-create' &&
+        this.router.history.current.name !== 'template-create' &&
+        this.router.history.current.name !== 'projects-template-details') {
         this._getReceiver()
       }
     },

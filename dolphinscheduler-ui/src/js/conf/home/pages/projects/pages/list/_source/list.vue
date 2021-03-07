@@ -132,11 +132,13 @@
     },
     methods: {
       ...mapActions('projects', ['deleteProjects']),
-      ...mapMutations('dag', ['setProjectName']),
+      ...mapMutations('dag', ['setProjectName', 'setAppRootUrl']),
       _switchProjects (item) {
         this.setProjectName(item.name)
+        this.setAppRootUrl(item.appRootUrl)
         localStore.setItem('projectName', `${item.name}`)
         localStore.setItem('projectId', `${item.id}`)
+        localStore.setItem('appRootUrl', `${item.appRootUrl}`)
         this.$router.push({ path: `/projects/index` })
       },
       _closeDelete (i) {

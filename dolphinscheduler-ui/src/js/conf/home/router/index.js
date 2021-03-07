@@ -115,6 +115,51 @@ const router = new Router({
               meta: {
                 title: `${i18n.$t('Scheduled task list')}`
               }
+            },
+            {
+              path: '/projects/definition/biz-prop-config/:processId',
+              name: 'definition-biz-prop-config',
+              component: resolve => require(['../pages/projects/pages/definition/pages/bizPropConfig/index'], resolve),
+              meta: {
+                title: `${i18n.$t('Biz prop config')}`
+              }
+            }
+          ]
+        },
+        {
+          path: '/projects/template',
+          name: 'template',
+          component: resolve => require(['../pages/projects/pages/template/index'], resolve),
+          meta: {
+            title: `${i18n.$t('Process template')}`
+          },
+          redirect: {
+            name: 'projects-template-list'
+          },
+          children: [
+            {
+              path: '/projects/template/list',
+              name: 'projects-template-list',
+              component: resolve => require(['../pages/projects/pages/template/pages/list/index'], resolve),
+              meta: {
+                title: `${i18n.$t('Process template')}`
+              }
+            },
+            {
+              path: '/projects/template/list/:id',
+              name: 'projects-template-details',
+              component: resolve => require(['../pages/projects/pages/template/pages/details/index'], resolve),
+              meta: {
+                title: `${i18n.$t('Process template details')}`
+              }
+            },
+            {
+              path: '/projects/template/create',
+              name: 'template-create',
+              component: resolve => require(['../pages/projects/pages/template/pages/create/index'], resolve),
+              meta: {
+                title: `${i18n.$t('Create process template')}`
+              }
             }
           ]
         },

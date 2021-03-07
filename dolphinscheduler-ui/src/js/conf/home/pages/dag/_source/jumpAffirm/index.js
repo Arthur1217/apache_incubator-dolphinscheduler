@@ -30,7 +30,11 @@ let $isPop = true
  * Listen for route changes
  */
 router.beforeEach((to, from, next) => {
-  if (from.name === 'projects-definition-details' || from.name === 'projects-instance-details' || from.name === 'definition-create') {
+  if (from.name === 'projects-definition-details'
+    || from.name === 'projects-template-details'
+    || from.name === 'projects-instance-details'
+    || from.name === 'definition-create'
+    || from.name === 'template-create') {
     if (!Affirm.paramVerification(from.name)) {
       Affirm.isPop(() => {
         next()
@@ -61,7 +65,7 @@ Affirm.paramVerification = (name) => {
   }
   const dagStore = store.state.dag
   let flag = false
-  if ($routerType === 'definition-create') {
+  if ($routerType === 'definition-create' || $routerType === 'template-create') {
     // No nodes jump out directly
     if (dagStore.tasks.length) {
       if (!dagStore.name) {

@@ -47,6 +47,27 @@ public class ProcessDefinition {
      * name
      */
     private String name;
+    
+    /**
+     * business type id
+     */
+    private Integer bizTypeId;
+    
+    /**
+     * business form url
+     */
+    private String bizFormUrl;
+    
+    /**
+     * template id
+     */
+    private Integer templateId;
+    
+    /**
+     * template name
+     */
+    @TableField(exist = false)
+    private String templateName;
 
     /**
      * version
@@ -167,7 +188,7 @@ public class ProcessDefinition {
      * resource ids
      */
     private String resourceIds;
-
+    
 
     public String getName() {
         return name;
@@ -176,7 +197,39 @@ public class ProcessDefinition {
     public void setName(String name) {
         this.name = name;
     }
-
+    
+    public Integer getBizTypeId() {
+        return bizTypeId;
+    }
+    
+    public void setBizTypeId(Integer bizTypeId) {
+        this.bizTypeId = bizTypeId;
+    }
+    
+    public String getBizFormUrl() {
+        return bizFormUrl;
+    }
+    
+    public void setBizFormUrl(String bizFormUrl) {
+        this.bizFormUrl = bizFormUrl;
+    }
+    
+    public Integer getTemplateId() {
+        return templateId;
+    }
+    
+    public void setTemplateId(Integer templateId) {
+        this.templateId = templateId;
+    }
+    
+    public String getTemplateName() {
+        return templateName;
+    }
+    
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+    
     public int getVersion() {
         return version;
     }
@@ -346,7 +399,7 @@ public class ProcessDefinition {
     public void setResourceIds(String resourceIds) {
         this.resourceIds = resourceIds;
     }
-
+    
     public int getTimeout() {
         return timeout;
     }
@@ -384,6 +437,9 @@ public class ProcessDefinition {
         return "ProcessDefinition{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", bizTypeId=" + bizTypeId +
+                ", bizFormUrl='" + bizFormUrl + '\'' +
+                ", templateId=" + templateId +
                 ", version=" + version +
                 ", releaseState=" + releaseState +
                 ", projectId=" + projectId +

@@ -87,16 +87,19 @@ public class ProcessDefinitionControllerTest {
 
         String projectName = "test";
         String name = "dag_test";
+        int bizTypeId = 123;
+        String bizFormUrl = "biz_form_url";
+        int templateId = 1234;
         String description = "desc test";
         String connects = "[]";
         Map<String, Object> result = new HashMap<>(5);
         putMsg(result, Status.SUCCESS);
         result.put("processDefinitionId",1);
 
-        Mockito.when(processDefinitionService.createProcessDefinition(user, projectName, name, json,
+        Mockito.when(processDefinitionService.createProcessDefinition(user, projectName, name, bizTypeId, bizFormUrl, templateId, json,
                 description, locations, connects)).thenReturn(result);
 
-        Result response = processDefinitionController.createProcessDefinition(user, projectName, name, json,
+        Result response = processDefinitionController.createProcessDefinition(user, projectName, name, bizTypeId, bizFormUrl, templateId, json,
                 locations, connects, description);
         Assert.assertEquals(Status.SUCCESS.getCode(),response.getCode().intValue());
     }

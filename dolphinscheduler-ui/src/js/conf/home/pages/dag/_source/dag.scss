@@ -469,6 +469,21 @@ svg path:hover {
   }
 }
 
+.has-biz-form-url-global {
+  background-color: #00BFFF;
+  padding: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.has-biz-form-url {
+  font-weight: bold;
+  .icos {
+    background-color: #00BFFF;
+    cursor: pointer;
+  }
+}
+
 .aLabel {
   -webkit-transition: background-color 0.25s ease-in;
   -moz-transition: background-color 0.25s ease-in;
@@ -565,4 +580,11 @@ svg path:hover {
     left: auto;
 }
 
+.ans-modal-box.ans-drawer.ans-drawer-right.dagMaskFull.mask {
+  width: 100%;
+  left: auto;
+  .ans-modal-box-content-wrapper {
+    width: 100%;
+  }
+}
 

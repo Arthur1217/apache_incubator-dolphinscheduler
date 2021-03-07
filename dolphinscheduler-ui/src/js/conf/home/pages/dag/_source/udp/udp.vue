@@ -30,6 +30,16 @@
         </x-input>
       </div>
 
+      <!-- [TODO] business type choose -->
+      <div style="padding-top: 12px;">
+        <x-input
+          type="text"
+          v-model="bizFormUrl"
+          v-if="-1 !== router.history.current.name.indexOf('template')"
+          :placeholder="$t('Please enter global business form url (optional)')">
+        </x-input>
+      </div>
+
       <template v-if="router.history.current.name !== 'projects-instance-details'">
         <div style="padding-top: 12px;">
           <x-input
@@ -101,6 +111,12 @@
       return {
         // dag name
         name: '',
+        // business type id
+        bizTypeId: '',
+        // business form url
+        bizFormUrl: '',
+        // template id
+        templateId: '',
         // dag description
         description: '',
         // Global custom parameters
@@ -111,7 +127,7 @@
         syncDefine: true,
         // Timeout alarm
         timeout: 0,
-
+        // tenant id
         tenantId: -1,
         // checked Timeout alarm
         checkedTimeout: true
@@ -138,6 +154,9 @@
       _accuStore(){
         this.store.commit('dag/setGlobalParams', _.cloneDeep(this.udpList))
         this.store.commit('dag/setName', _.cloneDeep(this.name))
+        this.store.commit('dag/setBizTypeId', _.cloneDeep(this.bizTypeId))
+        this.store.commit('dag/setBizFormUrl', _.cloneDeep(this.bizFormUrl))
+        this.store.commit('dag/setTemplateId', _.cloneDeep(this.templateId))
         this.store.commit('dag/setTimeout', _.cloneDeep(this.timeout))
         this.store.commit('dag/setTenantId', _.cloneDeep(this.tenantId))
         this.store.commit('dag/setDesc', _.cloneDeep(this.description))
@@ -170,7 +189,11 @@
         }
 
         if (this.store.state.dag.name !== this.name) {
-          this.store.dispatch('dag/verifDAGName', this.name).then(res => {
+          let verifyType = 'verifDAGName';
+          if (-1 !== this.router.history.current.name.indexOf('template')) {
+            verifyType = 'verifDAGName4Template';
+          }
+          this.store.dispatch('dag/' + verifyType, this.name).then(res => {
             _verif()
           }).catch(e => {
             this.$message.error(e.msg || '')
@@ -199,6 +222,9 @@
       this.udpList = dag.globalParams
       this.udpListCache = dag.globalParams
       this.name = dag.name
+      this.bizTypeId = dag.bizTypeId
+      this.bizFormUrl = dag.bizFormUrl
+      this.templateId = dag.templateId
       this.description = dag.description
       this.syncDefine = dag.syncDefine
       this.timeout = dag.timeout || 0

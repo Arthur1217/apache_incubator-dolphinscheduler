@@ -47,6 +47,24 @@
           </div>
         </div>
 
+        <!-- Business form url -->
+        <div class="clearfix list"
+             v-if="-1 !== router.history.current.name.indexOf('template')">
+          <div class="text-box"><span>{{$t('Business form url')}}</span></div>
+          <div class="cont-box">
+            <label class="label-box">
+              <x-input
+                type="text"
+                v-model="bizFormUrl"
+                :disabled="isDetails"
+                :placeholder="$t('Please enter node business form url (optional)')"
+                maxlength="255"
+                autocomplete="off">
+              </x-input>
+            </label>
+          </div>
+        </div>
+
         <!-- Running sign -->
         <div class="clearfix list">
           <div class="text-box"><span>{{$t('Run flag')}}</span></div>
@@ -301,6 +319,8 @@
         spinnerLoading: false,
         // node name
         name: '',
+        // business form url
+        bizFormUrl: '',
         // description
         description: '',
         // Node echo data
@@ -450,6 +470,7 @@
             type: this.taskType,
             id: this.id,
             name: this.name,
+            bizFormUrl: this.bizFormUrl,
             params: this.params,
             description: this.description,
             timeout: o,
@@ -474,6 +495,7 @@
             type: this.taskType,
             id: this.id,
             name: this.name,
+            bizFormUrl: this.bizFormUrl,
             params: this.params,
             description: this.description,
             runFlag: this.runFlag,
@@ -551,6 +573,7 @@
             type: this.taskType,
             id: this.id,
             name: this.name,
+            bizFormUrl: this.bizFormUrl,
             params: this.params,
             description: this.description,
             timeout: this.timeout,
@@ -638,6 +661,7 @@
       // Non-null objects represent backfill
       if (!_.isEmpty(o)) {
         this.name = o.name
+        this.bizFormUrl = o.bizFormUrl
         this.taskInstancePriority = o.taskInstancePriority
         this.runFlag = o.runFlag || 'NORMAL'
         this.description = o.description
@@ -677,7 +701,6 @@
       this.isContentBox = true
     },
     mounted () {
-
     },
     updated () {
     },
