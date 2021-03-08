@@ -30,6 +30,17 @@
       </div>
     </m-list-box>
     <m-list-box>
+      <div slot="text">{{$t('Http Wait')}}</div>
+      <div slot="content">
+        <label class="label-box">
+          <x-radio-group v-model="httpWait" >
+            <x-radio :label="'NO'" :disabled="isDetails">{{$t('No')}}</x-radio>
+            <x-radio :label="'YES'" :disabled="isDetails">{{$t('Yes')}}</x-radio>
+          </x-radio-group>
+        </label>
+      </div>
+    </m-list-box>
+    <m-list-box>
       <div slot="text">{{$t('Http Method')}}</div>
       <div slot="content">
         <x-select
@@ -114,6 +125,7 @@
         condition: '',
         localParams: [],
         httpParams: [],
+        httpWait: 'NO',
         httpMethod: 'GET',
         httpMethodList: [{ code: 'GET' }, { code: 'POST' }, { code: 'HEAD' }, { code: 'PUT' }, { code: 'DELETE' }],
         httpCheckCondition: 'STATUS_CODE_DEFAULT',
@@ -157,6 +169,7 @@
           localParams: this.localParams,
           httpParams: this.httpParams,
           url: this.url,
+          httpWait: this.httpWait,
           httpMethod: this.httpMethod,
           httpCheckCondition: this.httpCheckCondition,
           condition: this.condition
@@ -170,6 +183,7 @@
           localParams: this.localParams,
           httpParams: this.httpParams,
           url: this.url,
+          httpWait: this.httpWait,
           httpMethod: this.httpMethod,
           httpCheckCondition: this.httpCheckCondition,
           condition: this.condition
@@ -186,10 +200,12 @@
       }
     },
     created () {
-        let o = this.backfillItem
+      console.log(this.backfillItem);
+      let o = this.backfillItem
         // Non-null objects represent backfill
         if (!_.isEmpty(o)) {
           this.url = o.params.url || ''
+          this.httpWait = o.params.httpWait || 'NO'
           this.httpMethod = o.params.httpMethod || 'GET'
           this.httpCheckCondition = o.params.httpCheckCondition || 'DEFAULT'
           this.condition = o.params.condition || ''

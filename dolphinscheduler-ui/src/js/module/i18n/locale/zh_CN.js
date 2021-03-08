@@ -545,6 +545,7 @@ export default {
   'Execute time': '执行时间',
   'Complement range': '补数范围',
   'Http Url': '请求地址',
+  'Http Wait': '请求等待',
   'Http Method': '请求类型',
   'Http Parameters': '请求参数',
   'Http Parameters Key': '参数名',

@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.Charsets;
 import org.apache.dolphinscheduler.common.Constants;
 import org.apache.dolphinscheduler.common.enums.CommandType;
+import org.apache.dolphinscheduler.common.enums.Flag;
 import org.apache.dolphinscheduler.common.enums.HttpMethod;
 import org.apache.dolphinscheduler.common.enums.HttpParametersType;
 import org.apache.dolphinscheduler.common.process.HttpProperty;
@@ -303,6 +304,9 @@ public class HttpTask extends AbstractTask {
      * @return RequestConfig
      */
     private RequestConfig requestConfig() {
+        if (Flag.YES.equals(httpParameters.getHttpWait())) {
+            return RequestConfig.custom().setConnectTimeout(MAX_CONNECTION_MILLISECONDS).build();
+        }
         return RequestConfig.custom().setSocketTimeout(MAX_CONNECTION_MILLISECONDS).setConnectTimeout(MAX_CONNECTION_MILLISECONDS).build();
     }
 

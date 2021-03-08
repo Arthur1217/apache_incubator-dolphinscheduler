@@ -16,6 +16,7 @@
  */
 package org.apache.dolphinscheduler.common.task.http;
 
+import org.apache.dolphinscheduler.common.enums.Flag;
 import org.apache.dolphinscheduler.common.enums.HttpCheckCondition;
 import org.apache.dolphinscheduler.common.enums.HttpMethod;
 import org.apache.dolphinscheduler.common.process.HttpProperty;
@@ -34,6 +35,11 @@ public class HttpParameters extends AbstractParameters {
      * url
      */
     private String url;
+    
+    /**
+     * http wait
+     */
+    private Flag httpWait;
 
     /**
      * httpMethod
@@ -74,7 +80,15 @@ public class HttpParameters extends AbstractParameters {
     public void setUrl(String url) {
         this.url = url;
     }
-
+    
+    public Flag getHttpWait() {
+        return httpWait;
+    }
+    
+    public void setHttpWait(Flag httpWait) {
+        this.httpWait = httpWait;
+    }
+    
     public HttpMethod getHttpMethod() {
         return httpMethod;
     }

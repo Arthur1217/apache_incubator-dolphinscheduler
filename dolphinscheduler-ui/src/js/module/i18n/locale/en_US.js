@@ -544,7 +544,7 @@ export default {
   'Next five execution times': 'Next five execution times',
   'Execute time': 'Execute time',
   'Complement range': 'Complement range',
-  'Http Url': 'Http Url',
+  'Http Wait': 'Http Wait',
   'Http Method': 'Http Method',
   'Http Parameters': 'Http Parameters',
   'Http Parameters Key': 'Http Parameters Key',
