@@ -268,6 +268,7 @@ export default {
   'File Details': '文件详情',
   'Download Details': '下载详情',
   Return: '返回',
+  'Definition review': '查看定义',
   Save: '保存',
   'File Manage': '文件管理',
   'Upload Files': '上传文件',

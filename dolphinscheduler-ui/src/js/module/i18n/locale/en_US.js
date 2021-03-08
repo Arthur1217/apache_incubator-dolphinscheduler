@@ -268,6 +268,7 @@ export default {
   'File Details': 'File Details',
   'Download Details': 'Download Details',
   Return: 'Return',
+  'Definition review': 'Definition Review',
   Save: 'Save',
   'File Manage': 'File Manage',
   'Upload Files': 'Upload Files',

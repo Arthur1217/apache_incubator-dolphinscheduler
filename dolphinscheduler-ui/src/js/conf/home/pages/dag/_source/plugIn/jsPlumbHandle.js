@@ -207,7 +207,7 @@ JSP.prototype.jsonHandle = function ({ largeJson, locations }) {
       nodenumber: locations[v.id].nodenumber,
       successNode: v.conditionResult === undefined? '' : v.conditionResult.successNode[0],
       failedNode: v.conditionResult === undefined? '' : v.conditionResult.failedNode[0],
-      bizFormUrl: v.bizFormUrl
+      hasBizFormUrl: this.config.isFormFlow && v.bizFormUrl
     }))
 
     // contextmenu event
@@ -385,8 +385,8 @@ JSP.prototype.tasksClick = function (e) {
   const $body = $('body')
   if (this.config.isFormFlow) {
     $id = $(e.currentTarget).attr('id');
-    let bizFormUrl = $(`#${$id}`).data('biz-form-url');
-    if (bizFormUrl) {
+    let hasBizFormUrl = $(`#${$id}`).data('has-biz-form-url');
+    if (hasBizFormUrl) {
       findComponentDownward(this.dag.$root, 'dag-chart')._showBizPropConfigForm({
         id: $id
       });
@@ -573,7 +573,7 @@ JSP.prototype.copyNodes = function ($id) {
     y: newY,
     isAttachment: this.config.isAttachment,
     taskType: newNodeInfo.type,
-    bizFormUrl: newNodeInfo.bizFormUrl
+    hasBizFormUrl: this.config.isFormFlow && newNodeInfo.bizFormUrl
   }))
 
   // Get the generated node

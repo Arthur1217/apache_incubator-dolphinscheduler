@@ -44,9 +44,9 @@ const rtBantpl = () => {
 /**
  * return node html
  */
-const rtTasksTpl = ({ id, name, x, y, targetarr, isAttachment, taskType, runFlag, nodenumber, successNode, failedNode, bizFormUrl }) => {
+const rtTasksTpl = ({ id, name, x, y, targetarr, isAttachment, taskType, runFlag, nodenumber, successNode, failedNode, hasBizFormUrl }) => {
   let tpl = ''
-  tpl += `<div class="w jtk-draggable jtk-droppable jtk-endpoint-anchor jtk-connected ${isAttachment ? 'jtk-ep' : ''} ${!!bizFormUrl ? 'has-biz-form-url' : ''}" data-targetarr="${targetarr || ''}" data-successNode="${successNode || ''}" data-failedNode="${failedNode || ''}" data-nodenumber="${nodenumber || 0}" data-tasks-type="${taskType}" data-biz-form-url="${bizFormUrl}" id="${id}" style="left: ${x}px; top: ${y}px;">`
+  tpl += `<div class="w jtk-draggable jtk-droppable jtk-endpoint-anchor jtk-connected ${isAttachment ? 'jtk-ep' : ''} ${hasBizFormUrl ? 'has-biz-form-url' : ''}" data-targetarr="${targetarr || ''}" data-successNode="${successNode || ''}" data-failedNode="${failedNode || ''}" data-nodenumber="${nodenumber || 0}" data-tasks-type="${taskType}" data-has-biz-form-url="${hasBizFormUrl}" id="${id}" style="left: ${x}px; top: ${y}px;">`
   tpl += '<div>'
   tpl += '<div class="state-p"></div>'
   tpl += `<div class="icos icos-${taskType}"></div>`

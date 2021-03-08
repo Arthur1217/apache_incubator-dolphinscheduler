@@ -127,6 +127,17 @@
             style="vertical-align: middle;"
             type="primary"
             size="xsmall"
+            icon="ans-icon-code"
+            @click="_peepDefinition()"
+          >
+            {{ $t('Definition review') }}
+          </x-button>
+          <x-button
+            v-show="isFormFlow"
+            style="vertical-align: middle;"
+            type="primary"
+            size="xsmall"
+            icon="ans-icon-play"
             :loading="spinnerLoading"
             @click="_proceedBizPropConfig()"
           >
@@ -470,6 +481,9 @@ export default {
       this._udpTopFloorPop().then(() => {
         return this._save()
       })
+    },
+    _peepDefinition() {
+      this.$router.push({path: `/projects/definition/list/${this.$route.params.processId}`});
     },
     _proceedBizPropConfig() {
       this.spinnerLoading = true;
