@@ -169,6 +169,7 @@ import {formatDate} from '@/module/filter/filter'
 import {findComponentDownward} from '@/module/util/'
 import disabledState from '@/module/mixin/disabledState'
 import {mapActions, mapState, mapMutations} from 'vuex'
+import localStore from '@/module/util/localStorage'
 
 let eventModel
 
@@ -199,7 +200,7 @@ export default {
   },
   methods: {
     ...mapActions('dag', ['saveDAGchart', 'saveDAGchart4Template', 'updateInstance', 'updateDefinition', 'updateTemplate', 'getTaskState']),
-    ...mapMutations('dag', ['addTasks', 'cacheTasks', 'resetParams', 'setIsEditDag', 'setName']),
+    ...mapMutations('dag', ['addTasks', 'cacheTasks', 'resetParams', 'setIsEditDag', 'setName', 'setIsFormFlow']),
 
     // DAG automatic layout
     dagAutomaticLayout() {
@@ -486,13 +487,14 @@ export default {
       this.$router.push({path: `/projects/definition/list/${this.$route.params.processId}`});
     },
     _proceedBizPropConfig() {
+      let bizPropConfigParam = JSON.parse(localStore.getItem('bizPropConfigParam'));
       this.spinnerLoading = true;
-      this.store.dispatch(this.bizPropConfigParam.param.api, this.bizPropConfigParam.param.apiParams).then(res => {
+      this.store.dispatch(bizPropConfigParam.param.api, bizPropConfigParam.param.apiParams).then(res => {
         let msg;
-        if ('START' === this.bizPropConfigParam.type) {
+        if ('START' === bizPropConfigParam.type) {
           msg = res.msg;
-        } else if ('TIMING' === this.bizPropConfigParam.type) {
-          msg = this.bizPropConfigParam.param.msg;
+        } else if ('TIMING' === bizPropConfigParam.type) {
+          msg = bizPropConfigParam.param.msg;
         }
         this.$message.success(msg);
         setTimeout(() => {
@@ -764,6 +766,9 @@ export default {
     })
   },
   mounted() {
+    if ('definition-biz-prop-config' === this.$route.name) {
+      this.setIsFormFlow(true);
+    }
     this.init(this.arg)
   },
   beforeDestroy() {
@@ -778,19 +783,20 @@ export default {
     }
   },
   computed: {
-    ...mapState('dag', ['tasks', 'locations', 'connects', 'isEditDag', 'name', 'isFormFlow', 'bizFormUrl', 'bizPropConfigParam']),
+    ...mapState('dag', ['tasks', 'locations', 'connects', 'isEditDag', 'name', 'isFormFlow', 'bizFormUrl']),
     hasBizFormUrlGlobal() {
       return !!this.isFormFlow && this.bizFormUrl;
     },
     bizPropConfigName() {
+      let bizPropConfigParam = JSON.parse(localStore.getItem('bizPropConfigParam'));
       let name;
-      if ('START' === this.bizPropConfigParam.type) {
+      if ('START' === bizPropConfigParam.type) {
         name = `${i18n.$t('Start')}`;
-      } else if ('TIMING' === this.bizPropConfigParam.type) {
-        if ('CREATE' === this.bizPropConfigParam.param.scheduleType) {
-          name = `${i18n.$t('Create schedule')}`;
+      } else if ('TIMING' === bizPropConfigParam.type) {
+        if ('CREATE' === bizPropConfigParam.param.scheduleType) {
+          name = `${i18n.$t('Create Schedule')}`;
         } else {
-          name = `${i18n.$t('Update schedule')}`;
+          name = `${i18n.$t('Update Schedule')}`;
         }
       }
       return name;

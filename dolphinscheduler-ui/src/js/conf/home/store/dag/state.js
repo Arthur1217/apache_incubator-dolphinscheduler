@@ -116,7 +116,6 @@ export default {
   // Operating state
   isDetails: false,
   isFormFlow: false,
-  bizPropConfigParam: {},
   startup: {
 
   }

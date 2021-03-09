@@ -200,7 +200,6 @@
       }
     },
     created () {
-      console.log(this.backfillItem);
       let o = this.backfillItem
         // Non-null objects represent backfill
         if (!_.isEmpty(o)) {

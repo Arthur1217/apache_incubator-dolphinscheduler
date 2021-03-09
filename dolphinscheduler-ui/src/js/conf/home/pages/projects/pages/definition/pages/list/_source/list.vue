@@ -149,8 +149,10 @@
   import i18n from '@/module/i18n'
   import mStart from './start'
   import mTiming from './timing'
-  import { mapActions, mapMutations } from 'vuex'
+  import { mapActions } from 'vuex'
   import { publishStatus } from '@/conf/home/pages/dag/_source/config'
+  import localStore from '@/module/util/localStorage'
+
 
   export default {
     name: 'definition-list',
@@ -169,7 +171,6 @@
     methods: {
       ...mapActions('dag', ['editProcessState', 'getStartCheck', 'getReceiver', 'deleteDefinition', 'batchDeleteDefinition','exportDefinition','copyProcess']),
       ...mapActions('security', ['getWorkerGroupsAll']),
-      ...mapMutations('dag', ['setBizPropConfigParam']),
       _rtWithTemplateStatus (templateId) {
         return templateId ? `${i18n.$t('Yes')}` : `${i18n.$t('No')}`;
       },
@@ -201,7 +202,8 @@
                   },
                   onBizPropConfig(bizPropConfigParam) {
                     modal.remove();
-                    self.setBizPropConfigParam(bizPropConfigParam);
+                    bizPropConfigParam.processId = item.id;
+                    localStore.setItem('bizPropConfigParam', JSON.stringify(bizPropConfigParam));
                     self.$router.push({
                       path: `/projects/definition/biz-prop-config/${item.id}`
                     });
@@ -254,7 +256,8 @@
                   },
                   onBizPropConfig(bizPropConfigParam) {
                     modal.remove();
-                    self.setBizPropConfigParam(bizPropConfigParam);
+                    bizPropConfigParam.processId = item.id;
+                    localStore.setItem('bizPropConfigParam', JSON.stringify(bizPropConfigParam));
                     self.$router.push({
                       path: `/projects/definition/biz-prop-config/${item.id}`
                     });

@@ -152,11 +152,12 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { mapActions, mapMutations } from 'vuex'
+  import { mapActions } from 'vuex'
   import mSpin from '@/module/components/spin/spin'
   import mTiming from '../../pages/list/_source/timing'
   import mNoData from '@/module/components/noData/noData'
   import { publishStatus } from '@/conf/home/pages/dag/_source/config'
+  import localStore from '@/module/util/localStorage'
 
   export default {
     name: 'list',
@@ -173,7 +174,6 @@
     },
     methods: {
       ...mapActions('dag', ['getScheduleList', 'scheduleOffline', 'scheduleOnline', 'getReceiver','deleteTiming']),
-      ...mapMutations('dag', ['setBizPropConfigParam']),
       /**
        * delete
        */
@@ -304,7 +304,8 @@
                   },
                   onBizPropConfig(bizPropConfigParam) {
                     modal.remove();
-                    self.setBizPropConfigParam(bizPropConfigParam);
+                    bizPropConfigParam.processId = item.processDefinitionId;
+                    localStore.setItem('bizPropConfigParam', JSON.stringify(bizPropConfigParam));
                     self.$router.push({
                       path: `/projects/definition/biz-prop-config/${item.processDefinitionId}`
                     });

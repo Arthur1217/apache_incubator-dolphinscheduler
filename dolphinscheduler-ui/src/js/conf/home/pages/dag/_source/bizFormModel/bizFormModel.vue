@@ -31,6 +31,7 @@
 import _ from 'lodash'
 import clickoutside from '@/module/util/clickoutside'
 import disabledState from '@/module/mixin/disabledState'
+import localStore from '@/module/util/localStorage'
 
 export default {
   name: 'biz-form-model',
@@ -115,7 +116,18 @@ export default {
       }
       let resultUrl = fullBizFormUrl + `${concat}processDefinitionId=${this.router.history.current.params.processId}`;
       if (!this.isGlobal) {
-        resultUrl += `&taskId=${this.id}`;
+        resultUrl += `&taskDefinitionId=${this.id}`;
+      }
+      let bizPropConfigParam = JSON.parse(localStore.getItem('bizPropConfigParam'));
+      let scheduleType = bizPropConfigParam.type;
+      if ('START' === scheduleType) {
+        resultUrl += '&scheduleType=START';
+      } else {
+        let schedule = JSON.parse(bizPropConfigParam.param.apiParams.schedule);
+        let startTime = schedule.startTime ? encodeURIComponent(schedule.startTime) : '';
+        let endTime = schedule.endTime ? encodeURIComponent(schedule.endTime) : '';
+        let crontab = schedule.crontab ? encodeURIComponent(schedule.crontab) : '';
+        resultUrl += `&scheduleType=TIMING&startTime=${startTime}&endTime=${endTime}&crontab=${crontab}`;
       }
       return resultUrl;
     }

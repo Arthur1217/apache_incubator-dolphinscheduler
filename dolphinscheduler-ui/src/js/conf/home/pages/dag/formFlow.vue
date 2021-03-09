@@ -21,11 +21,11 @@
   </div>
 </template>
 <script>
-import _ from 'lodash';
 import mDag from './_source/dag.vue';
 import mSpin from '@/module/components/spin/spin';
 import disabledState from '@/module/mixin/disabledState';
-import {mapActions, mapMutations, mapState} from 'vuex';
+import {mapActions, mapMutations} from 'vuex';
+import localStore from '@/module/util/localStorage'
 
 export default {
   name: 'form-flow',
@@ -35,21 +35,17 @@ export default {
       isLoading: true,
     }
   },
-  computed: {
-    ...mapState('dag', ['bizPropConfigParam']),
-  },
   components: {mDag, mSpin},
   mixins: [disabledState],
   props: {},
   methods: {
-    ...mapMutations('dag', ['resetParams', 'setIsDetails', 'setIsFormFlow']),
+    ...mapMutations('dag', ['resetParams', 'setIsDetails']),
     ...mapActions('dag', ['getProcessList', 'getProjectList', 'getResourcesList', 'getProcessDetails', 'getResourcesListJar']),
     ...mapActions('security', ['getTenantList', 'getWorkerGroupsAll']),
     init() {
       this.isLoading = true;
       this.resetParams();
       this.setIsDetails(true);
-      this.setIsFormFlow(true);
       Promise.all([
         // Node details
         this.getProcessDetails(this.$route.params.processId),
@@ -81,7 +77,8 @@ export default {
     }
   },
   created() {
-    if (_.isEmpty(this.bizPropConfigParam)) {
+    let bizPropConfigParam = JSON.parse(localStore.getItem('bizPropConfigParam'));
+    if (bizPropConfigParam.processId != this.$route.params.processId) {
       this.$router.push({name: 'projects-definition-list'});
     } else {
       this.init();

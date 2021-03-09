@@ -124,13 +124,6 @@ export default {
   },
 
   /**
-   * business properties configuration params
-   */
-  setBizPropConfigParam(state, payload) {
-    state.bizPropConfigParam = payload
-  },
-
-  /**
    * reset params
    */
   resetParams (state, payload) {
