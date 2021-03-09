@@ -83,7 +83,7 @@ public class BizType {
     
     @Override
     public String toString() {
-        return "ProcessDefinition{" +
+        return "BizType{" +
                 "id=" + id +
                 ", parentId='" + parentId + '\'' +
                 ", typeCode=" + typeCode +

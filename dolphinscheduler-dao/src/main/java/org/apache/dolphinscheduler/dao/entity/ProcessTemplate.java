@@ -336,7 +336,7 @@ public class ProcessTemplate {
     
     @Override
     public String toString() {
-        return "ProcessDefinition{" +
+        return "ProcessTemplate{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", bizTypeId=" + bizTypeId +

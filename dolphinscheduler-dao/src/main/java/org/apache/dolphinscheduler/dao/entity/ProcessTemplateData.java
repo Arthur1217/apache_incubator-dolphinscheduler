@@ -100,7 +100,7 @@ public class ProcessTemplateData {
     
     @Override
     public String toString() {
-        return "ProcessData{" +
+        return "ProcessTemplateData{" +
                 "globalParams=" + globalParams +
                 ", tasks=" + tasks +
                 ", tenantId=" + tenantId +

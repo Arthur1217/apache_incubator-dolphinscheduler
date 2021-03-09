@@ -20,39 +20,36 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
-import java.util.Date;
-
 
 /**
- * relation of project and business type
+ * runtime variable
  *
  * @author ArthurZhang
  * @since 2021-02-05
  */
-@TableName("t_ds_relation_project_biz_type")
-public class ProjectBizType {
-    
+@TableName("t_ds_runtime_variable")
+public class RuntimeVariable {
     /**
      * id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private int id;
     /**
-     * project id
+     * process instance id
      */
-    private int projectId;
+    private int processInstanceId;
     /**
-     * business type id
+     * task instance id
      */
-    private int bizTypeId;
+    private int taskInstanceId;
     /**
-     * create time
+     * var name
      */
-    private Date createTime;
+    private String varName;
     /**
-     * update type
+     * var value
      */
-    private Date updateTime;
+    private String varValue;
     
     
     public int getId() {
@@ -63,47 +60,46 @@ public class ProjectBizType {
         this.id = id;
     }
     
-    public int getProjectId() {
-        return projectId;
+    public int getProcessInstanceId() {
+        return processInstanceId;
     }
     
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
+    public void setProcessInstanceId(int processInstanceId) {
+        this.processInstanceId = processInstanceId;
     }
     
-    public int getBizTypeId() {
-        return bizTypeId;
+    public int getTaskInstanceId() {
+        return taskInstanceId;
     }
     
-    public void setBizTypeId(int bizTypeId) {
-        this.bizTypeId = bizTypeId;
+    public void setTaskInstanceId(int taskInstanceId) {
+        this.taskInstanceId = taskInstanceId;
     }
     
-    public Date getCreateTime() {
-        return createTime;
+    public String getVarName() {
+        return varName;
     }
     
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setVarName(String varName) {
+        this.varName = varName;
     }
     
-    public Date getUpdateTime() {
-        return updateTime;
+    public String getVarValue() {
+        return varValue;
     }
     
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setVarValue(String varValue) {
+        this.varValue = varValue;
     }
     
     @Override
     public String toString() {
-        return "ProjectBizType{" +
+        return "RuntimeVariable{" +
                 "id=" + id +
-                ", projectId=" + projectId +
-                ", bizTypeId='" + bizTypeId + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", updateTime='" + updateTime + '\'' +
+                ", processInstanceId=" + processInstanceId +
+                ", taskInstanceId=" + taskInstanceId +
+                ", varName='" + varName + '\'' +
+                ", varValue='" + varValue + '\'' +
                 '}';
     }
-    
 }
