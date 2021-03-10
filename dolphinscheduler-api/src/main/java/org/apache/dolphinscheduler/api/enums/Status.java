@@ -144,6 +144,7 @@ public enum Status {
     QUERY_PROCESS_TEMPLATE_LIST(10154,"query process template list", "查询流程模板列表错误"),
     QUERY_GLOBAL_RUNTIME_VARIABLE_LIST_BY_PROCESS_INSTANCE_ID(10158,"query global runtime variable list by process instance id error", "查询全局运行时变量列表通过流程实例ID错误"),
     GET_GLOBAL_RUNTIME_VARIABLE_BY_PROCESS_INSTANCE_ID_AND_VAR_NAME(10159,"get global runtime variable by process instance id and var name error", "获取全局运行时变量通过流程实例ID和变量名错误"),
+    GET_SCHEDULE_INFO_VARIABLE_BY_PROCESS_INSTANCE_ID(10163,"get schedule info variable by process instance id error", "获取调度信息变量通过流程实例ID错误"),
     SET_GLOBAL_RUNTIME_VARIABLE(10160,"set global runtime variable", "设置全局运行时变量错误"),
     QUERY_LOCAL_RUNTIME_VARIABLE_LIST_BY_PROCESS_INSTANCE_ID_AND_TASK_INSTANCE_ID(10160,"query local runtime variable list by process instance id and task instance id error", "查询局部运行时变量列表通过流程实例ID和任务实例ID错误"),
     GET_LOCAL_RUNTIME_VARIABLE_BY_PROCESS_INSTANCE_ID_AND_TASK_INSTANCE_ID_AND_VAR_NAME(10161,"get local runtime variable by process instance id and task instance id and var name error", "获取局部运行时变量通过流程实例ID和任务实例ID和变量名错误"),

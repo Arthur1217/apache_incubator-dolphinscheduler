@@ -245,4 +245,31 @@ public class RuntimeVariableService extends BaseService {
         result.put(RUNTIME_VARIABLE_ID, runtimeVariable.getId());
         return result;
     }
+    
+    /**
+     * get schedule info variable by process instance id
+     *
+     * @param loginUser         login user
+     * @param projectName       project name
+     * @param processInstanceId process instance id
+     * @return runtime variable
+     */
+    public Map<String, Object> getScheduleInfoVariableByProcessInstanceId(User loginUser, String projectName, int processInstanceId) {
+        Project project = projectMapper.queryByName(projectName);
+        Map<String, Object> checkResult = projectService.checkProjectAndAuth(loginUser, project, projectName);
+        Status resultStatus = (Status) checkResult.get(Constants.STATUS);
+        if (resultStatus != Status.SUCCESS) {
+            return checkResult;
+        }
+        QueryWrapper<RuntimeVariable> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda()
+                .eq(RuntimeVariable::getProcessInstanceId, processInstanceId)
+                .eq(RuntimeVariable::getTaskInstanceId, -1)
+                .eq(RuntimeVariable::getVarName, Constants.SCHEDULE_INFO_VARIABLE);
+        RuntimeVariable runtimeVariable = runtimeVariableMapper.selectOne(queryWrapper);
+        Map<String, Object> result = new HashMap<>(5);
+        result.put(Constants.DATA_LIST, null == runtimeVariable ? null : new RuntimeVariableData(runtimeVariable.getVarName(), runtimeVariable.getVarValue()));
+        putMsg(result, Status.SUCCESS);
+        return result;
+    }
 }

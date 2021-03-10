@@ -38,8 +38,10 @@ import org.apache.dolphinscheduler.service.bean.SpringApplicationContext;
 import org.apache.dolphinscheduler.service.process.ProcessService;
 import org.apache.dolphinscheduler.service.quartz.cron.CronUtils;
 import org.apache.dolphinscheduler.service.queue.PeerTaskInstancePriorityQueue;
+import org.apache.dolphinscheduler.service.variable.RuntimeVariableService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -141,6 +143,9 @@ public class MasterExecThread implements Runnable {
      *
      */
     private NettyRemotingClient nettyRemotingClient;
+    
+    @Autowired
+    private RuntimeVariableService runtimeVariableService;
 
     /**
      * constructor of MasterExecThread
@@ -230,6 +235,8 @@ public class MasterExecThread implements Runnable {
             scheduleDate = iterator.next();
             processInstance.setScheduleTime(scheduleDate);
             processService.updateProcessInstance(processInstance);
+            // save schedule info when executing complement process
+            runtimeVariableService.saveTimingInfo(processInstance.getId(), processInstance.getScheduleTime());
         }else{
             scheduleDate = processInstance.getScheduleTime();
             if(scheduleDate == null){

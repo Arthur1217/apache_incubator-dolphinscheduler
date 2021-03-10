@@ -32,6 +32,7 @@ import org.apache.dolphinscheduler.dao.mapper.*;
 import org.apache.dolphinscheduler.remote.utils.Host;
 import org.apache.dolphinscheduler.service.log.LogClientService;
 import org.apache.dolphinscheduler.service.quartz.cron.CronUtils;
+import org.apache.dolphinscheduler.service.variable.RuntimeVariableService;
 import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,6 +102,9 @@ public class ProcessService {
 
     @Autowired
     private  ProjectMapper projectMapper;
+    
+    @Autowired
+    private RuntimeVariableService runtimeVariableService;
 
     /**
      * handle Command (construct ProcessInstance from Command) , wrapped in transaction
@@ -646,6 +650,8 @@ public class ProcessService {
         int runTime = processInstance.getRunTimes();
         switch (commandType){
             case START_PROCESS:
+                // save schedule info when commandType is START_PROCESS
+                runtimeVariableService.saveStartInfo(processInstance.getId());
                 break;
             case START_FAILURE_TASK_PROCESS:
                 // find failed tasks and init these tasks
@@ -715,6 +721,8 @@ public class ProcessService {
                 initComplementDataParam(processDefinition, processInstance, cmdParam);
                 break;
             case SCHEDULER:
+                // save schedule info when commandType is SCHEDULER
+                runtimeVariableService.saveTimingInfo(processInstance.getId(), processInstance.getScheduleTime());
                 break;
             default:
                 break;

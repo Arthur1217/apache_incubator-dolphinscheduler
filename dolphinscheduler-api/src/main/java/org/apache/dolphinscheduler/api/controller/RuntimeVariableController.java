@@ -221,4 +221,29 @@ public class RuntimeVariableController extends BaseController {
         Map<String, Object> result = runtimeVariableService.setLocalRuntimeVariable(loginUser, projectName, processInstanceId, taskInstanceId, varName, varValue);
         return returnDataList(result);
     }
+    
+    /**
+     * get schedule info variable by process instance id
+     *
+     * @param loginUser         login user
+     * @param projectName       project name
+     * @param processInstanceId process instance id
+     * @return runtime variable
+     */
+    @ApiOperation(value = "getScheduleInfoVariableByProcessInstanceId", notes = "GET_SCHEDULE_INFO_VARIABLE_BY_PROCESS_INSTANCE_ID_NOTES")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "processInstanceId", value = "PROCESS_INSTANCE_ID", required = true, dataType = "Int"),
+            @ApiImplicitParam(name = "varName", value = "VARIABLE_NAME", required = true, dataType = "String")
+    })
+    @GetMapping(value = "/get-schedule-info-by-process-instance-id")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiException(GET_SCHEDULE_INFO_VARIABLE_BY_PROCESS_INSTANCE_ID)
+    public Result getScheduleInfoVariableByProcessInstanceId(@ApiIgnore @RequestAttribute(value = Constants.SESSION_USER) User loginUser,
+                                                             @ApiParam(name = "projectName", value = "PROJECT_NAME", required = true) @PathVariable String projectName,
+                                                             @RequestParam(value = "processInstanceId") int processInstanceId) {
+        logger.info("get global runtime variable, login user:{}, project name:{}, process instance id:{}",
+                loginUser.getUserName(), projectName, processInstanceId);
+        Map<String, Object> result = runtimeVariableService.getScheduleInfoVariableByProcessInstanceId(loginUser, projectName, processInstanceId);
+        return returnDataList(result);
+    }
 }
