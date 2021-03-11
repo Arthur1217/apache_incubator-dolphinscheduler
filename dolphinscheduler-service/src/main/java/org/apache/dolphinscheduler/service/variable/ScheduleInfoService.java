@@ -19,7 +19,7 @@ import java.util.Date;
  * @since 2021-02-05
  */
 @Component
-public class RuntimeVariableService {
+public class ScheduleInfoService {
     
     @Autowired
     private RuntimeVariableMapper runtimeVariableMapper;
