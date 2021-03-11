@@ -232,8 +232,7 @@ public class RuntimeVariableController extends BaseController {
      */
     @ApiOperation(value = "getScheduleInfoVariableByProcessInstanceId", notes = "GET_SCHEDULE_INFO_VARIABLE_BY_PROCESS_INSTANCE_ID_NOTES")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "processInstanceId", value = "PROCESS_INSTANCE_ID", required = true, dataType = "Int"),
-            @ApiImplicitParam(name = "varName", value = "VARIABLE_NAME", required = true, dataType = "String")
+            @ApiImplicitParam(name = "processInstanceId", value = "PROCESS_INSTANCE_ID", required = true, dataType = "Int")
     })
     @GetMapping(value = "/get-schedule-info-by-process-instance-id")
     @ResponseStatus(HttpStatus.OK)
