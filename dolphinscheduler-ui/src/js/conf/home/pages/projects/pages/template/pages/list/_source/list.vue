@@ -103,7 +103,8 @@
               </template>
             </x-poptip>
             <x-button type="info" shape="circle" size="xsmall" data-toggle="tooltip" :title="$t('Export')" @click="_export(item)"  icon="ans-icon-download"><!--{{$t('导出')}}--></x-button>
-            <x-button type="info" shape="circle" size="xsmall" data-toggle="tooltip" :title="$t('Create process')" @click="_createProcess(item)"  icon="ans-icon-node"><!--{{$t('创建工作流')}}--></x-button>
+            <x-button type="info" shape="circle" size="xsmall" data-toggle="tooltip" :title="$t('Create process')"
+                      @click="_createProcess(item)"  icon="ans-icon-node" :disabled="item.releaseState !== 'ONLINE'"><!--{{$t('创建工作流')}}--></x-button>
 
           </td>
         </tr>

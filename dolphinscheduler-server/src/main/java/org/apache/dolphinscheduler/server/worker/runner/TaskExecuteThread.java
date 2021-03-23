@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.dolphinscheduler.service.variable.ScheduleInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,6 +124,11 @@ public class TaskExecuteThread implements Runnable {
                     taskExecutionContext.getProcessDefineId(),
                     taskExecutionContext.getProcessInstanceId(),
                     taskExecutionContext.getTaskInstanceId()));
+            
+            taskExecutionContext.setTaskDefinitionId(taskNode.getId());
+            taskExecutionContext.setScheduleInfo(
+                    SpringApplicationContext.getBean(ScheduleInfoService.class)
+                            .getScheduleInfoVariableByProcessInstanceId(taskExecutionContext.getProcessInstanceId()));
 
             task = TaskManager.newTask(taskExecutionContext, taskLogger);
 

@@ -17,6 +17,7 @@
 
 package org.apache.dolphinscheduler.server.entity;
 
+import org.apache.dolphinscheduler.dao.entity.ScheduleInfo;
 import org.apache.dolphinscheduler.remote.command.Command;
 import org.apache.dolphinscheduler.remote.command.TaskExecuteRequestCommand;
 import org.apache.dolphinscheduler.remote.utils.FastJsonSerializer;
@@ -29,13 +30,22 @@ import java.util.Map;
  *  master/worker task transport
  */
 public class TaskExecutionContext implements Serializable{
-
+    
+    /**
+     * task definition id
+     */
+    private String taskDefinitionId;
+    
+    /**
+     * schedule info
+     */
+    private ScheduleInfo scheduleInfo;
+    
     /**
      *  task id
      */
     private int taskInstanceId;
-
-
+    
     /**
      *  taks name
      */
@@ -195,7 +205,23 @@ public class TaskExecutionContext implements Serializable{
      *  procedure TaskExecutionContext
      */
     private ProcedureTaskExecutionContext procedureTaskExecutionContext;
-
+    
+    public String getTaskDefinitionId() {
+        return taskDefinitionId;
+    }
+    
+    public void setTaskDefinitionId(String taskDefinitionId) {
+        this.taskDefinitionId = taskDefinitionId;
+    }
+    
+    public ScheduleInfo getScheduleInfo() {
+        return scheduleInfo;
+    }
+    
+    public void setScheduleInfo(ScheduleInfo scheduleInfo) {
+        this.scheduleInfo = scheduleInfo;
+    }
+    
     public int getTaskInstanceId() {
         return taskInstanceId;
     }
@@ -203,7 +229,7 @@ public class TaskExecutionContext implements Serializable{
     public void setTaskInstanceId(int taskInstanceId) {
         this.taskInstanceId = taskInstanceId;
     }
-
+    
     public String getTaskName() {
         return taskName;
     }

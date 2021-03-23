@@ -166,7 +166,7 @@ public class TaskExecuteProcessor implements NettyRequestProcessor {
      * @return log path
      */
     private String getTaskLogPath(TaskExecutionContext taskExecutionContext) {
-        String baseLog = ((TaskLogDiscriminator) ((SiftingAppender) ((LoggerContext) LoggerFactory.getILoggerFactory())
+        /*String baseLog = ((TaskLogDiscriminator) ((SiftingAppender) ((LoggerContext) LoggerFactory.getILoggerFactory())
                 .getLogger("ROOT")
                 .getAppender("TASKLOGFILE"))
                 .getDiscriminator()).getLogBase();
@@ -180,7 +180,8 @@ public class TaskExecuteProcessor implements NettyRequestProcessor {
                 baseLog +  Constants.SINGLE_SLASH +
                 taskExecutionContext.getProcessDefineId() + Constants.SINGLE_SLASH  +
                 taskExecutionContext.getProcessInstanceId() + Constants.SINGLE_SLASH  +
-                taskExecutionContext.getTaskInstanceId() + ".log";
+                taskExecutionContext.getTaskInstanceId() + ".log";*/
+        return "";
     }
 
     /**

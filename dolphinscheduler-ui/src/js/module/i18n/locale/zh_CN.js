@@ -171,6 +171,7 @@ export default {
   'Warning': '警告',
   'Known': '已知晓',
   'Definition with template editing warning': '修改基于流程模板构建的流程定义可能导致业务功能不正常！极不建议对流程节点进行删除。',
+  'Form flow configuring warning': '切换调度类型时，请确保当前工作流相关的所有流程实例已经退出，并确保所有与调度类型相关的业务表单重新配置(切换为START时需要同时确保定时调度已经被删除)。否则切换操作将可能导致现有或产生的流程实例运行错误。',
   Confirm: '确定',
   'Task status statistics': '任务状态统计',
   Number: '数量',

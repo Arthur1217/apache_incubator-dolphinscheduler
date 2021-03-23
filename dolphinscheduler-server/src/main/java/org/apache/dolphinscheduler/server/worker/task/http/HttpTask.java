@@ -52,7 +52,6 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +60,32 @@ import java.util.Map;
  * http task
  */
 public class HttpTask extends AbstractTask {
+    
+    /**
+     * 任务信息参数名称 - 流程定义ID
+     */
+    public static final String TASK_INFO_PARAM_NAME_PROCESS_DEFINITION_ID = "dsProcessDefinitionId";
+    /**
+     * 任务信息参数名称 - 流程实例ID
+     */
+    public static final String TASK_INFO_PARAM_NAME_PROCESS_INSTANCE_ID = "dsProcessInstanceId";
+    /**
+     * 任务信息参数名称 - 任务定义ID
+     */
+    public static final String TASK_INFO_PARAM_NAME_TASK_DEFINITION_ID = "dsTaskDefinitionId";
+    /**
+     * 任务信息参数名称 - 任务实例ID
+     */
+    public static final String TASK_INFO_PARAM_NAME_TASK_INSTANCE_ID = "dsTaskInstanceId";
+    /**
+     * 任务信息参数名称 - 调度信息 - 调度类型
+     */
+    public static final String TASK_INFO_PARAM_NAME_SCHEDULE_INFO_SCHEDULE_TYPE = "dsScheduleInfoScheduleType";
+    /**
+     * 任务信息参数名称 - 调度信息 - 触发时间
+     */
+    public static final String TASK_INFO_PARAM_NAME_SCHEDULE_INFO_TRIGGER_TIME = "dsScheduleInfoTriggerTime";
+    
 
     /**
      * http parameters
@@ -159,11 +184,52 @@ public class HttpTask extends AbstractTask {
                 httpPropertyList.add(JSON.parseObject(params,HttpProperty.class));
             }
         }
+        
+        // add task instance info
+        addTaskInstanceInfo(httpPropertyList);
+        
         addRequestParams(builder,httpPropertyList);
         String requestUrl = ParameterUtils.convertParameterPlaceholders(httpParameters.getUrl(),ParamUtils.convert(paramsMap));
         HttpUriRequest request = builder.setUri(requestUrl).build();
         setHeaders(request,httpPropertyList);
         return client.execute(request);
+    }
+    
+    /**
+     * add task instance info to http parameters
+     * @param httpPropertyList http property list
+     */
+    private void addTaskInstanceInfo(List<HttpProperty> httpPropertyList) {
+        HttpProperty httpProperty = new HttpProperty();
+        httpProperty.setProp(TASK_INFO_PARAM_NAME_PROCESS_DEFINITION_ID);
+        httpProperty.setHttpParametersType(HttpParametersType.PARAMETER);
+        httpProperty.setValue(String.valueOf(taskExecutionContext.getProcessDefineId()));
+        httpPropertyList.add(httpProperty);
+        httpProperty = new HttpProperty();
+        httpProperty.setProp(TASK_INFO_PARAM_NAME_PROCESS_INSTANCE_ID);
+        httpProperty.setHttpParametersType(HttpParametersType.PARAMETER);
+        httpProperty.setValue(String.valueOf(taskExecutionContext.getProcessInstanceId()));
+        httpPropertyList.add(httpProperty);
+        httpProperty = new HttpProperty();
+        httpProperty.setProp(TASK_INFO_PARAM_NAME_TASK_DEFINITION_ID);
+        httpProperty.setHttpParametersType(HttpParametersType.PARAMETER);
+        httpProperty.setValue(String.valueOf(taskExecutionContext.getTaskDefinitionId()));
+        httpPropertyList.add(httpProperty);
+        httpProperty = new HttpProperty();
+        httpProperty.setProp(TASK_INFO_PARAM_NAME_TASK_INSTANCE_ID);
+        httpProperty.setHttpParametersType(HttpParametersType.PARAMETER);
+        httpProperty.setValue(String.valueOf(taskExecutionContext.getTaskInstanceId()));
+        httpPropertyList.add(httpProperty);
+        httpProperty = new HttpProperty();
+        httpProperty.setProp(TASK_INFO_PARAM_NAME_SCHEDULE_INFO_SCHEDULE_TYPE);
+        httpProperty.setHttpParametersType(HttpParametersType.PARAMETER);
+        httpProperty.setValue(String.valueOf(taskExecutionContext.getScheduleInfo().getScheduleType()));
+        httpPropertyList.add(httpProperty);
+        httpProperty = new HttpProperty();
+        httpProperty.setProp(TASK_INFO_PARAM_NAME_SCHEDULE_INFO_TRIGGER_TIME);
+        httpProperty.setHttpParametersType(HttpParametersType.PARAMETER);
+        httpProperty.setValue(String.valueOf(taskExecutionContext.getScheduleInfo().getTriggerTime()));
+        httpPropertyList.add(httpProperty);
     }
 
     /**

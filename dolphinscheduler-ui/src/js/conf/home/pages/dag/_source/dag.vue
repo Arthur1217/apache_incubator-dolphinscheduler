@@ -789,6 +789,9 @@ export default {
     },
     bizPropConfigName() {
       let bizPropConfigParam = JSON.parse(localStore.getItem('bizPropConfigParam'));
+      if (!bizPropConfigParam) {
+        return '';
+      }
       let name;
       if ('START' === bizPropConfigParam.type) {
         name = `${i18n.$t('Start')}`;

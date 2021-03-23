@@ -43,7 +43,7 @@ public class ScheduleInfoService {
         saveScheduleInfo(ScheduleType.TIMING, processInstanceId, triggerTime);
     }
     
-    private void saveScheduleInfo(ScheduleType scheduleType, int processInstanceId, Date tiggerTime) {
+    private void saveScheduleInfo(ScheduleType scheduleType, int processInstanceId, Date triggerTime) {
         QueryWrapper<RuntimeVariable> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()
                 .eq(RuntimeVariable::getProcessInstanceId, processInstanceId)
@@ -55,11 +55,27 @@ public class ScheduleInfoService {
             runtimeVariable.setProcessInstanceId(processInstanceId);
             runtimeVariable.setTaskInstanceId(-1);
             runtimeVariable.setVarName(Constants.SCHEDULE_INFO_VARIABLE);
-            runtimeVariable.setVarValue(JSONUtils.toJson(new ScheduleInfo(scheduleType, tiggerTime)));
+            runtimeVariable.setVarValue(JSONUtils.toJson(new ScheduleInfo(scheduleType, triggerTime)));
             runtimeVariableMapper.insert(runtimeVariable);
             return;
         }
-        runtimeVariable.setVarValue(JSONUtils.toJson(new ScheduleInfo(scheduleType, tiggerTime)));
+        runtimeVariable.setVarValue(JSONUtils.toJson(new ScheduleInfo(scheduleType, triggerTime)));
         runtimeVariableMapper.updateById(runtimeVariable);
+    }
+    
+    /**
+     * get schedule info variable by process instance id
+     *
+     * @param processInstanceId process instance id
+     * @return schedule info variable
+     */
+    public ScheduleInfo getScheduleInfoVariableByProcessInstanceId(int processInstanceId) {
+        QueryWrapper<RuntimeVariable> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda()
+                .eq(RuntimeVariable::getProcessInstanceId, processInstanceId)
+                .eq(RuntimeVariable::getTaskInstanceId, -1)
+                .eq(RuntimeVariable::getVarName, Constants.SCHEDULE_INFO_VARIABLE);
+        RuntimeVariable runtimeVariable = runtimeVariableMapper.selectOne(queryWrapper);
+        return JSONUtils.parseObject(runtimeVariable.getVarValue(), ScheduleInfo.class);
     }
 }

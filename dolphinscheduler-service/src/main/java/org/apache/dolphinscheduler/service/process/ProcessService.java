@@ -130,6 +130,15 @@ public class ProcessService {
         processInstance.setCommandType(command.getCommandType());
         processInstance.addHistoryCmd(command.getCommandType());
         saveProcessInstance(processInstance);
+        
+        // save schedule info when command type is START_PROCESS or SCHEDULER
+        if (CommandType.START_PROCESS == command.getCommandType()) {
+            scheduleInfoService.saveStartInfo(processInstance.getId());
+        }
+        if (CommandType.SCHEDULER == command.getCommandType()) {
+            scheduleInfoService.saveTimingInfo(processInstance.getId(), processInstance.getScheduleTime());
+        }
+        
         this.setSubProcessParam(processInstance);
         delCommandByid(command.getId());
         return processInstance;
@@ -650,8 +659,6 @@ public class ProcessService {
         int runTime = processInstance.getRunTimes();
         switch (commandType){
             case START_PROCESS:
-                // save schedule info when commandType is START_PROCESS
-                scheduleInfoService.saveStartInfo(processInstance.getId());
                 break;
             case START_FAILURE_TASK_PROCESS:
                 // find failed tasks and init these tasks
@@ -721,8 +728,6 @@ public class ProcessService {
                 initComplementDataParam(processDefinition, processInstance, cmdParam);
                 break;
             case SCHEDULER:
-                // save schedule info when commandType is SCHEDULER
-                scheduleInfoService.saveTimingInfo(processInstance.getId(), processInstance.getScheduleTime());
                 break;
             default:
                 break;

@@ -21,6 +21,7 @@
   </div>
 </template>
 <script>
+import i18n from '@/module/i18n'
 import mDag from './_source/dag.vue';
 import mSpin from '@/module/components/spin/spin';
 import disabledState from '@/module/mixin/disabledState';
@@ -67,6 +68,24 @@ export default {
         this.isLoading = false
       });
     },
+    _showWarn() {
+      // TODO：此处是未考虑周全的情况，需要后续充分补充
+      this.$modal.dialog({
+        closable: false,
+        showMask: true,
+        escClose: true,
+        className: 'v-modal-custom',
+        transitionName: 'opacityp',
+        title: `<span style="color: red; font-weight: bold;">${i18n.$t('Warning')}</span>`,
+        content: `${i18n.$t('Form flow configuring warning')}`,
+        ok: {
+          text: `${i18n.$t('Known')}`
+        },
+        cancel: {
+          show: false
+        }
+      });
+    },
   },
   watch: {
     '$route': {
@@ -81,6 +100,7 @@ export default {
     if (bizPropConfigParam.processId != this.$route.params.processId) {
       this.$router.push({name: 'projects-definition-list'});
     } else {
+      this._showWarn();
       this.init();
     }
   },

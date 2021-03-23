@@ -70,6 +70,11 @@ public abstract class AbstractTask {
      * other resource manager appId , for example : YARN etc
      */
     protected String appIds;
+    
+    /**
+     * task definition id
+     */
+    protected String taskDefinitionId;
 
 
     /**
@@ -155,7 +160,15 @@ public abstract class AbstractTask {
     public void setProcessId(int processId) {
         this.processId = processId;
     }
-
+    
+    public String getTaskDefinitionId() {
+        return taskDefinitionId;
+    }
+    
+    public void setTaskDefinitionId(String taskDefinitionId) {
+        this.taskDefinitionId = taskDefinitionId;
+    }
+    
     /**
      * get task parameters
      * @return AbstractParameters

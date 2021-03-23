@@ -171,6 +171,7 @@ export default {
   'Warning': 'Warning',
   'Known': 'Known',
   'Definition with template editing warning': 'Editing definition which created by template may cause business malfunction! Suggest not deleting task nodes very much.',
+  'Form flow configuring warning': 'Make sure all schedule related business form to be reconfigured and all process instance of this process has been exited (and all timing schedule has been remove when changing to START) when you changing schedule type (START/TIMING). Otherwise the "Schedule Type Changing" operation may cause error for current running and being created instances.',
   Confirm: 'Confirm',
   'Task status statistics': 'Task Status Statistics',
   Number: 'Number',
